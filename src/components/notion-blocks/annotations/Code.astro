@@ -1,0 +1,18 @@
+---
+import { RichText } from "../../../lib/interfaces.ts";
+
+export interface Props {
+	richText: RichText;
+}
+
+const { richText } = Astro.props;
+---
+
+{
+	/* prettier-ignore */
+	richText.Annotation.Code ? (
+    <code class="px-2 border-none font-mono text-rose-800 dark:text-rose-300"><slot /></code>
+  ) : (
+    <slot />
+  )
+}

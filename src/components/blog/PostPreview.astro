@@ -1,0 +1,46 @@
+---
+// import type { CollectionEntry } from "astro:content";
+// import type { HTMLTag, Polymorphic } from "astro/types";
+import type { HTMLTag } from "astro/types";
+import FormattedDate from "../FormattedDate.astro";
+import type { Post } from "src/lib/interfaces";
+import { getPostBySlug } from "@/lib/notion/client";
+
+// type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
+// 	post: CollectionEntry<"post">;
+// 	withDesc?: boolean;
+// };
+//FIXME: why is this a new method?
+
+interface Props {
+	post: Post;
+	as?: HTMLTag;
+	withDesc?: boolean;
+}
+
+const { post, as: Tag = "div", withDesc = false } = Astro.props;
+
+const fullPost = (await getPostBySlug(post.Slug)) as Post;
+//TODO: what is this?
+// const postDate = post.data.updatedDate ?? post.data.publishDate;
+---
+
+<!-- <FormattedDate date={postDate} class="min-w-[120px] text-gray-500" />
+<Tag>
+	<a href={`/posts/${post.slug}/`} class="cactus-link" rel="prefetch">
+		{post.data.title}
+	</a>
+</Tag>
+{withDesc && <q class="line-clamp-3 block italic">{post.data.description}</q>} -->
+<FormattedDate date={new Date(fullPost.Date)} class="min-w-[120px] text-gray-500" />
+<Tag>
+	<a
+		href={`/posts/${fullPost.Slug}/`}
+		class="cactus-link"
+		rel="prefetch"
+		transition:name={fullPost.Title}
+	>
+		{fullPost.Title}
+	</a>
+</Tag>
+{withDesc && <q class="line-clamp-3 block italic">{fullPost.Excerpt}</q>}

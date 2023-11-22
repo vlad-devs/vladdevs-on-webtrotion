@@ -1,0 +1,90 @@
+---
+// import type { CollectionEntry } from "astro:content";
+
+import BaseLayout from "./Base.astro";
+import BlogHero from "@/components/blog/Hero";
+import TOC from "@/components/blog/TOC";
+import WebMentions from "@/components/blog/webmentions/index";
+
+//ADDED
+import type { Post } from "src/lib/interfaces";
+import type { Heading } from "@/types";
+
+//FIXME: so why is this this way?
+
+// interface Props {
+// 	post: CollectionEntry<"post">;
+// }
+
+interface Props {
+	post: Post;
+	ogImage?: string;
+	headings: Heading[];
+}
+
+// const { post } = Astro.props;
+// const {
+// 	data: { title, description, ogImage, publishDate, updatedDate },
+// 	slug,
+// } = post;
+
+const { post, ogImage, headings } = Astro.props;
+const socialImage = ogImage ?? `/og-image/${post.Slug}.png`;
+// const articleDate = updatedDate?.toISOString() ?? publishDate.toISOString();
+const articleDate = new Date(post.Date).toISOString();
+// const { headings } = await post.render();
+---
+
+<script>
+	const scrollBtn = document.getElementById("to-top-btn") as HTMLButtonElement;
+	const targetHeader = document.getElementById("blog-hero") as HTMLDivElement;
+
+	function callback(entries: IntersectionObserverEntry[]) {
+		entries.forEach((entry) => {
+			// only show the scroll to top button when the heading is out of view
+			scrollBtn.dataset.show = (!entry.isIntersecting).toString();
+		});
+	}
+
+	scrollBtn.addEventListener("click", () => {
+		document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+	});
+
+	const observer = new IntersectionObserver(callback);
+	observer.observe(targetHeader);
+</script>
+
+<!-- <BaseLayout meta={{ title, description, articleDate, ogImage: socialImage }}> -->
+<BaseLayout
+	meta={{ title: post.Title, description: post.Excerpt, articleDate, ogImage: socialImage }}
+>
+	<div class="gap-x-10 lg:flex lg:items-start">
+		{!!headings.length && <TOC headings={headings} />}
+		<article class="flex-grow break-words" data-pagefind-body>
+			<div id="blog-hero"><BlogHero post={post} /></div>
+			<!-- <div id="blog-hero"><BlogHero content={post} /></div> -->
+			<div class="mt-12">
+				<slot />
+				<WebMentions />
+			</div>
+		</article>
+	</div>
+	<button
+		id="to-top-btn"
+		class="z-90 fixed bottom-8 end-4 flex h-10 w-10 translate-y-28 items-center justify-center rounded-full border-2 border-transparent bg-zinc-200 text-3xl opacity-0 transition-all duration-300 hover:border-zinc-400 data-[show=true]:translate-y-0 data-[show=true]:opacity-100 dark:bg-zinc-700 sm:end-8 sm:h-12 sm:w-12"
+		aria-label="Back to Top"
+		data-show="false"
+		><svg
+			xmlns="http://www.w3.org/2000/svg"
+			aria-hidden="true"
+			focusable="false"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke-width="2"
+			stroke="currentColor"
+			class="h-6 w-6"
+		>
+			<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"></path>
+		</svg>
+	</button>
+</BaseLayout>

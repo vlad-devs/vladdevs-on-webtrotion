@@ -1,0 +1,54 @@
+---
+import { ENABLE_LIGHTBOX } from "../../constants.ts";
+import * as interfaces from "../../lib/interfaces.ts";
+import { filePath } from "../../lib/blog-helpers";
+import Caption from "./Caption.astro";
+
+export interface Props {
+	block: interfaces.Block;
+}
+
+const { block } = Astro.props;
+
+let image = "";
+if (block.Image.External) {
+	image = block.Image.External.Url;
+} else if (block.Image.File) {
+	image = filePath(new URL(block.Image.File.Url));
+}
+---
+
+<figure class="image">
+	{
+		image && (
+			<div>
+				<div>
+					{ENABLE_LIGHTBOX ? (
+						<a data-fslightbox href={image} data-type="image">
+							<img src={image} alt="image block" />
+						</a>
+					) : (
+						<img src={image} alt="image block" />
+					)}
+				</div>
+				<Caption richTexts={block.Image.Caption} />
+			</div>
+		)
+	}
+</figure>
+
+<style>
+	.image {
+		display: flex;
+		margin: 0.2rem auto 0;
+	}
+	.image > div {
+		margin: 0 auto;
+	}
+	.image > div > div {
+	}
+	.image > div > div img {
+		display: block;
+		max-width: 100%;
+	}
+</style>

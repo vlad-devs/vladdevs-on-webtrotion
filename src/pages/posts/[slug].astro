@@ -1,0 +1,96 @@
+---
+// import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+// import PostLayout from "@/layouts/BlogPost";
+// import { getAllPosts } from "@/utils";
+
+import NotionBlocks from "@/components/NotionBlocks.astro";
+import PostLayout from "@/layouts/BlogPost.astro";
+import { extractTargetBlocks, filePath } from "@/lib/blog-helpers";
+import { downloadFile, getAllBlocksByBlockId, getAllPosts, getBlock } from "@/lib/notion/client";
+import type { Post } from "@/lib/interfaces";
+import { buildHeadings } from "@/utils";
+
+// export const getStaticPaths = (async () => {
+// 	const blogEntries = await getAllPosts();
+// 	return blogEntries.map((entry) => ({
+// 		params: { slug: entry.slug },
+// 		props: { entry },
+// 	}));
+// }) satisfies GetStaticPaths;
+
+// type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+// const { entry } = Astro.props;
+// const { Content } = await entry.render();
+
+export async function getStaticPaths() {
+	const posts = await getAllPosts();
+
+	return posts.map((post) => ({
+		params: { slug: post.Slug },
+		props: { post },
+	}));
+}
+interface Props {
+	post: Post;
+}
+const { post } = Astro.props;
+
+if (!post) {
+	throw new Error("Post not found. slug: ${slug}");
+}
+
+const blocks = await getAllBlocksByBlockId(post.PageId);
+
+const headings = buildHeadings(blocks);
+
+const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
+	.concat(extractTargetBlocks("video", blocks))
+	.concat(extractTargetBlocks("file", blocks))
+	.filter((block) => {
+		if (!block) {
+			return false;
+		}
+		const imageOrVideoOrFile = block.Image || block.File || block.Video;
+		return imageOrVideoOrFile && imageOrVideoOrFile.File && imageOrVideoOrFile.File.Url;
+	});
+
+// Download files
+await Promise.all(
+	fileAtacchedBlocks
+		.map(async (block) => {
+			const expiryTime = (block.Image || block.File || block.Video).File.ExpiryTime;
+			if (Date.parse(expiryTime) > Date.now()) {
+				return Promise.resolve(block);
+			}
+			return getBlock(block.Id);
+		})
+		.map((promise) =>
+			promise.then((block) => {
+				let url!: URL;
+				try {
+					url = new URL((block.Image || block.File || block.Video).File.Url);
+				} catch (err) {
+					console.log("Invalid file URL");
+					return Promise.reject();
+				}
+				return Promise.resolve(url);
+			}),
+		)
+		.map((promise) => promise.then(downloadFile)),
+);
+
+let ogImage;
+if (post.FeaturedImage) {
+	ogImage = new URL(filePath(new URL(post.FeaturedImage.Url)), Astro.site).toString();
+}
+---
+
+<!-- FIXME: use this maybe later for correct collect based stuff--><!-- <PostLayout post={entry}>
+	<Content />
+</PostLayout> -->
+<PostLayout post={post} ogImage={ogImage} headings={headings}>
+	<div class="post-body max-w-prose">
+		<NotionBlocks blocks={blocks} isRoot={true} />
+	</div>
+</PostLayout>

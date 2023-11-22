@@ -1,0 +1,22 @@
+---
+import * as interfaces from "../../lib/interfaces.ts";
+import { convertToTailwindColor } from "../../lib/style-helpers.ts";
+import RichText from "./RichText.astro";
+import NotionBlocks from "../NotionBlocks.astro";
+
+export interface Props {
+	block: interfaces.Block;
+	headings: interfaces.Block[];
+}
+
+const { block, headings } = Astro.props;
+---
+
+<blockquote
+	class={`!p-4 my-4 border-s-4 border-gray-300 dark:border-gray-500 ${convertToTailwindColor(
+		block.Quote.Color,
+	)}`}
+>
+	{block.Quote.RichTexts.map((richText: interfaces.RichText) => <RichText richText={richText} />)}
+	{block.Quote.Children && <NotionBlocks blocks={block.Quote.Children} headings={headings} />}
+</blockquote>

@@ -1,0 +1,18 @@
+---
+import { RichText } from "../../../lib/interfaces.ts";
+
+export interface Props {
+	richText: RichText;
+}
+
+const { richText } = Astro.props;
+---
+
+{
+	/* prettier-ignore */
+	richText.Href && !richText.Mention ? (
+    <a href={richText.Href} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
+  ) : (
+    <slot />
+  )
+}

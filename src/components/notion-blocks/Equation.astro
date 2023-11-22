@@ -1,0 +1,17 @@
+---
+import katex from "katex";
+import * as interfaces from "../../lib/interfaces.ts";
+
+export interface Props {
+	block: interfaces.Block;
+}
+
+const { block } = Astro.props;
+---
+
+<div
+	class="equation text-center"
+	set:html={katex.renderToString(block.Equation.Expression, {
+		throwOnError: false,
+	})}
+/>

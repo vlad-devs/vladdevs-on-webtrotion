@@ -1,0 +1,56 @@
+---
+import * as interfaces from "../../lib/interfaces.ts";
+import RichText from "./RichText.astro";
+
+export interface Props {
+	block: interfaces.Block;
+}
+
+const { block } = Astro.props;
+---
+
+<div class="relative table overflow-x-auto rounded shadow-md">
+	<table class="w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400">
+		<tbody>
+			{
+				block.Table?.Rows.map((tableRow: interfaces.TableRow, j: number) => (
+					<tr class="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
+						{tableRow.Cells.map((cell: interfaces.TableCell, i: number) => {
+							if (block.Table?.HasColumnHeader && j === 0) {
+								return (
+									<th
+										scope="col"
+										class="bg-gray-50 px-6 py-3 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
+									>
+										{cell.RichTexts.map((richText: interfaces.RichText) => (
+											<RichText richText={richText} />
+										))}
+									</th>
+								);
+							}
+							if (block.Table?.HasRowHeader && i === 0) {
+								return (
+									<th
+										scope="row"
+										class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
+									>
+										{cell.RichTexts.map((richText: interfaces.RichText) => (
+											<RichText richText={richText} />
+										))}
+									</th>
+								);
+							}
+							return (
+								<td class="px-6 py-4">
+									{cell.RichTexts.map((richText: interfaces.RichText) => (
+										<RichText richText={richText} />
+									))}
+								</td>
+							);
+						})}
+					</tr>
+				))
+			}
+		</tbody>
+	</table>
+</div>

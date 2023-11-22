@@ -1,0 +1,115 @@
+---
+import Prism from "prismjs";
+import "prismjs/components/prism-css";
+import "prismjs/components/prism-diff";
+import "prismjs/components/prism-docker";
+import "prismjs/components/prism-elixir";
+import "prismjs/components/prism-go";
+import "prismjs/components/prism-hcl";
+import "prismjs/components/prism-java";
+import "prismjs/components/prism-json";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-ruby";
+import "prismjs/components/prism-sql";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-yaml";
+import * as interfaces from "../../lib/interfaces";
+import Caption from "./Caption.astro";
+
+export interface Props {
+	block: interfaces.Block;
+}
+
+const { block } = Astro.props;
+
+const code = block.Code.RichTexts.map(
+	(richText: interfaces.RichText) => richText.Text.Content,
+).join("");
+const language = block.Code.Language.toLowerCase();
+const grammer = Prism.languages[language.toLowerCase()] || Prism.languages.javascript;
+---
+
+<div class="code">
+	<div>
+		{
+			/* prettier-ignore */
+			language === 'mermaid' ? (
+        <pre class="mermaid">{code}</pre>
+      ) : (
+        <>
+          <div>
+            <button class="copy" data-code={code} data-done-text="Copied!">
+              Copy
+            </button>
+          </div>
+          <pre><code set:html={Prism.highlight(code, grammer, language)} /></pre>
+        </>
+      )
+		}
+	</div>
+	<Caption richTexts={block.Code.Caption} />
+</div>
+
+<script>
+	import mermaid from "mermaid";
+	mermaid.initialize({ startOnLoad: true, theme: "neutral" });
+</script>
+
+<script>
+	document.querySelectorAll("button.copy").forEach((button) => {
+		button.addEventListener("click", (ev) => {
+			navigator.clipboard.writeText(ev.target.getAttribute("data-code")).then(() => {
+				const originalText = ev.target.innerText;
+
+				ev.target.innerText = ev.target.getAttribute("data-done-text");
+
+				setTimeout(() => {
+					ev.target.innerText = originalText;
+				}, 3000);
+			});
+		});
+	});
+</script>
+
+<style>
+	.code {
+		display: block;
+		width: 100%;
+		margin-bottom: 0.6rem;
+	}
+	.code > div {
+		background: rgb(247, 246, 243);
+		border-radius: var(--radius);
+	}
+	.code > div div {
+		display: flex;
+		justify-content: flex-end;
+	}
+	.code button.copy {
+		display: block;
+		width: 4.4rem;
+		border: 0;
+		border-radius: var(--radius);
+		background-color: rgba(227, 226, 224, 0.5);
+		color: var(--fg);
+		line-height: 1.2rem;
+		cursor: pointer;
+	}
+	.code pre {
+		display: block;
+		overflow: auto;
+		padding: 0.8rem 2rem 2rem;
+		font-size: 0.9rem;
+		line-height: 1.2rem;
+		white-space: pre-wrap;
+	}
+	.code pre.mermaid {
+		padding: 2rem;
+	}
+	.code pre code {
+		color: var(--fg);
+		padding: 0;
+		background: rgb(247, 246, 243) !important;
+		border-radius: 0;
+	}
+</style>

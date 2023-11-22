@@ -1,0 +1,42 @@
+---
+import * as interfaces from "../../lib/interfaces";
+import { filePath } from "../../lib/blog-helpers";
+
+export interface Props {
+	block: interfaces.Block;
+}
+
+const { block } = Astro.props;
+
+let url: URL;
+try {
+	url = new URL(block.File?.External?.Url || block.File?.File?.Url);
+} catch (err) {
+	console.error(`Invalid file URL. error: ${err}`);
+}
+const filename = decodeURIComponent(url.pathname.split("/").slice(-1)[0]);
+---
+
+<div class="file">
+	{
+		url && (
+			<div>
+				{block.File.Caption ? block.File.Caption : filename}
+				{" ["}
+				<a
+					href={block.File.External ? url.String() : filePath(url)}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<span>Download</span>
+					<img
+						src="https://www.notion.so/icons/document_gray.svg"
+						alt="Document Icon"
+						class="inline h-4 w-4 align-middle"
+					/>
+				</a>
+				{"]"}
+			</div>
+		)
+	}
+</div>

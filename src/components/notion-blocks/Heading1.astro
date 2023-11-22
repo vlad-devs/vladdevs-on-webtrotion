@@ -1,0 +1,61 @@
+---
+import * as interfaces from "../../lib/interfaces.ts";
+import { buildHeadingId } from "../../lib/blog-helpers.ts";
+import RichText from "./RichText.astro";
+import NotionBlocks from "../NotionBlocks.astro";
+
+export interface Props {
+	block: interfaces.Block;
+	headings: interfaces.Block[];
+}
+
+const { block, headings } = Astro.props;
+
+const id = buildHeadingId(block.Heading1);
+---
+
+{
+	block.Heading1.IsToggleable ? (
+		<details class="toggle mb-0 mt-8">
+			<summary class="cursor-pointer">
+				<a
+					href={`#${id}`}
+					id={id}
+					onclick="var fullUrl = `${window.location.origin}${window.location.pathname}#${id}`; navigator.clipboard.writeText(fullUrl);"
+				>
+					<h2 class="mb-4 mt-8 inline text-2xl">
+						{block.Heading1.RichTexts.map((richText: interfaces.RichText) => (
+							<RichText richText={richText} />
+						))}
+					</h2>
+				</a>
+			</summary>
+			<div class="ml-4">
+				{block.Heading1.Children && (
+					<NotionBlocks blocks={block.Heading1.Children} headings={headings} />
+				)}
+			</div>
+		</details>
+	) : (
+		<a
+			href={`#${id}`}
+			id={id}
+			class="inline"
+			onclick="var fullUrl = `${window.location.origin}${window.location.pathname}#${id}`; navigator.clipboard.writeText(fullUrl);"
+		>
+			<h2 class="mb-4 mt-8 text-2xl font-normal">
+				{block.Heading1.RichTexts.map((richText: interfaces.RichText) => (
+					<RichText richText={richText} />
+				))}
+			</h2>
+		</a>
+	)
+}
+
+<style>
+	h2:hover::after {
+		content: "#";
+		color: var(--accent);
+		margin-left: 2rem;
+	}
+</style>
