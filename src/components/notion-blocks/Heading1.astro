@@ -53,9 +53,16 @@ const id = buildHeadingId(block.Heading1);
 }
 
 <style>
-	h2:hover::after {
-		content: "#";
-		color: var(--accent);
-		margin-left: 2rem;
-	}
+h2::after {
+    content: "#";
+    color: var(--accent);
+    margin-left: 2rem;
+    display: inline-block;
+    opacity: 0; /* Start with invisible content */
+    transition: opacity 0.3s ease; /* Transition the opacity */
+}
+
+h2:hover::after {
+    opacity: 1; /* Make the content visible on hover */
+}
 </style>
