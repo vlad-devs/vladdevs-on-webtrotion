@@ -2,6 +2,7 @@
 import { ENABLE_LIGHTBOX } from "../../constants.ts";
 import * as interfaces from "../../lib/interfaces.ts";
 import { filePath } from "../../lib/blog-helpers";
+
 import Caption from "./Caption.astro";
 
 export interface Props {
@@ -11,10 +12,10 @@ export interface Props {
 const { block } = Astro.props;
 
 let image = "";
-if (block.Image.External) {
-	image = block.Image.External.Url;
-} else if (block.Image.File) {
-	image = filePath(new URL(block.Image.File.Url));
+if (block.NImage?.External) {
+	image = block.NImage.External.Url;
+} else if (block.NImage?.File) {
+	image = filePath(new URL(block.NImage.File.Url));
 }
 ---
 
@@ -31,7 +32,7 @@ if (block.Image.External) {
 						<img src={image} alt="image block" />
 					)}
 				</div>
-				<Caption richTexts={block.Image.Caption} />
+				<Caption richTexts={block.NImage.Caption} />
 			</div>
 		)
 	}

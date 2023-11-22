@@ -24,7 +24,7 @@ import type {
   BulletedListItem,
   NumberedListItem,
   ToDo,
-  Image,
+  NImage,
   Code,
   Quote,
   Equation,
@@ -601,7 +601,7 @@ function _buildBlock(blockObject: responses.BlockObject): Block {
       break;
     case "image":
       if (blockObject.image) {
-        const image: Image = {
+        const image: NImage = {
           Caption: blockObject.image.caption?.map(_buildRichText) || [],
           Type: blockObject.image.type,
         };
@@ -614,7 +614,7 @@ function _buildBlock(blockObject: responses.BlockObject): Block {
             ExpiryTime: blockObject.image.file.expiry_time,
           };
         }
-        block.Image = image;
+        block.NImage = image;
       }
       break;
     case "file":

@@ -35,7 +35,7 @@ export interface Block {
   BulletedListItem?: BulletedListItem;
   NumberedListItem?: NumberedListItem;
   ToDo?: ToDo;
-  Image?: Image;
+  NImage?: NImage;
   File?: File;
   Code?: Code;
   Quote?: Quote;
@@ -99,7 +99,7 @@ export interface ToDo {
   Children?: Block[];
 }
 
-export interface Image {
+export interface NImage {
   Caption: RichText[];
   Type: string;
   File?: FileObject;

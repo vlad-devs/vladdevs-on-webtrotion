@@ -21,7 +21,7 @@ const filename = decodeURIComponent(url.pathname.split("/").slice(-1)[0]);
 	{
 		url && (
 			<div>
-				{block.File.Caption ? block.File.Caption : filename}
+				{block.File.Caption && block.File.Caption.length > 0 && block.File.Caption[0].Text.Content? block.File.Caption[0].Text.Content : filename}
 				{" ["}
 				<a
 					href={block.File.External ? url.String() : filePath(url)}

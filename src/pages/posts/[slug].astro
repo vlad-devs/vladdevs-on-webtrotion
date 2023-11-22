@@ -51,7 +51,7 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 		if (!block) {
 			return false;
 		}
-		const imageOrVideoOrFile = block.Image || block.File || block.Video;
+		const imageOrVideoOrFile = block.NImage || block.File || block.Video;
 		return imageOrVideoOrFile && imageOrVideoOrFile.File && imageOrVideoOrFile.File.Url;
 	});
 
@@ -59,7 +59,7 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 await Promise.all(
 	fileAtacchedBlocks
 		.map(async (block) => {
-			const expiryTime = (block.Image || block.File || block.Video).File.ExpiryTime;
+			const expiryTime = (block.NImage || block.File || block.Video).File.ExpiryTime;
 			if (Date.parse(expiryTime) > Date.now()) {
 				return Promise.resolve(block);
 			}
@@ -69,7 +69,7 @@ await Promise.all(
 			promise.then((block) => {
 				let url!: URL;
 				try {
-					url = new URL((block.Image || block.File || block.Video).File.Url);
+					url = new URL((block.NImage || block.File || block.Video).File.Url);
 				} catch (err) {
 					console.log("Invalid file URL");
 					return Promise.reject();

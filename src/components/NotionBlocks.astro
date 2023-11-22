@@ -6,7 +6,7 @@ import Heading1 from "./notion-blocks/Heading1.astro";
 import Heading2 from "./notion-blocks/Heading2.astro";
 import Heading3 from "./notion-blocks/Heading3.astro";
 import TableOfContents from "./notion-blocks/TableOfContents.astro";
-import Image from "./notion-blocks/Image.astro";
+import NImage from "./notion-blocks/NImage.astro";
 import Video from "./notion-blocks/Video.astro";
 import Code from "./notion-blocks/Code.astro";
 import Quote from "./notion-blocks/Quote.astro";
@@ -118,7 +118,7 @@ const bookmarkURLMap = await buildURLToHTMLMap(bookmarkURLs);
 			case "table_of_contents":
 				return <TableOfContents block={block} headings={headings} />;
 			case "image":
-				return <Image block={block} />;
+				return <NImage block={block} />;
 			case "video":
 				return <Video block={block} />;
 			case "code":

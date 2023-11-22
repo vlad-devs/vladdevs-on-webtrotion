@@ -30,6 +30,7 @@
     "metascraper-description": "^5.37.1",
     "metascraper-image": "^5.37.1",
     "metascraper-title": "^5.37.1",
+    "metascraper-url": "^5.38.0",
     "node-fetch": "^3.3.2",
     "prismjs": "^1.29.0",
     "satori": "0.10.8",
