@@ -594,6 +594,7 @@ function _buildBlock(blockObject: responses.BlockObject): Block {
             Type: blockObject.video.type,
             Url: blockObject.video.file.url,
             ExpiryTime: blockObject.video.file.expiry_time,
+            Size: blockObject.video.file.size,
           };
         }
         block.Video = video;

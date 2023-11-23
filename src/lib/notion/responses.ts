@@ -50,6 +50,7 @@ interface FileObject {
 interface File {
   url: string;
   expiry_time: string;
+  size?: number;
 }
 
 interface External {

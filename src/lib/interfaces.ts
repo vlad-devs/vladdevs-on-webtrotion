@@ -129,6 +129,7 @@ export interface FileObject {
   Type: string;
   Url: string;
   ExpiryTime?: string;
+  Size?: number;
 }
 
 export interface External {

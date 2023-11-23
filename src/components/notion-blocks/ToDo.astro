@@ -33,10 +33,10 @@ const { block, headings } = Astro.props;
               {b.ToDo.RichTexts.map((richText: interfaces.RichText) => {
                 if (b.ToDo.Checked) {
                   return (
-                    <s class="block">
+                  <span class="line-through block">
                       {/* Block element for the text */}
                       <RichText richText={richText} />
-                    </s>
+                    </span>
                   );
                 }
                 return <RichText richText={richText} class="block" />;
