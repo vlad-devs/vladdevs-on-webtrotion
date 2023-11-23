@@ -18,15 +18,15 @@ const { block, headings } = Astro.props;
 
 			let indentClass = "";
 			if (headingBlock.Type === "heading_2") {
-				indentClass = "indent-1";
+				indentClass = "pl-6";
 			} else if (headingBlock.Type === "heading_3") {
-				indentClass = "indent-2";
+				indentClass = "pl-12";
 			}
 
 			return (
 				<a
 					href={`#${buildHeadingId(heading)}`}
-					class={`table-of-contents ${convertToTailwindColor(
+					class={`block leading-7 table-of-contents hover:font-bold ${convertToTailwindColor(
 						block.TableOfContents.Color,
 					)} ${indentClass}`}
 				>
@@ -36,25 +36,3 @@ const { block, headings } = Astro.props;
 		})
 	}
 </div>
-
-<style>
-	.table-of-contents {
-	}
-	.table-of-contents > a {
-		display: block;
-		line-height: 1.8rem;
-		font-size: 0.9rem;
-		font-weight: 500;
-		text-decoration: underline;
-	}
-	.table-of-contents > a:hover {
-		text-decoration-color: var(--anchor-border);
-		text-decoration-thickness: 2px;
-	}
-	.table-of-contents > a.indent-1 {
-		padding-left: 1.5rem;
-	}
-	.table-of-contents > a.indent-2 {
-		padding-left: 3rem;
-	}
-</style>

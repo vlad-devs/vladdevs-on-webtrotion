@@ -28,19 +28,6 @@ const { block, headings } = Astro.props;
 	</div>
 </details>
 
-<details class={`toggle p-2 ${convertToTailwindColor(block.Toggle.Color)}`}>
-	<summary class="flex cursor-pointer">
-		{
-			block.Toggle.RichTexts.map((richText: interfaces.RichText) => (
-				<RichText richText={richText} />
-			))
-		}
-	</summary>
-	<div class="ml-2">
-		<NotionBlocks blocks={block.Toggle.Children} headings={headings} />
-	</div>
-</details>
-
 <style>
 	.toggle > summary > a {
 		display: inline;
