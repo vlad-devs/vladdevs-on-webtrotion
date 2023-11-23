@@ -1,13 +1,15 @@
 ---
-import * as interfaces from '../../lib/interfaces.ts'
+import * as interfaces from '../../../lib/interfaces.ts'
 import {
   isTweetURL,
   isTikTokURL,
   isInstagramURL,
   isPinterestURL,
   isCodePenURL,
-} from '../../lib/blog-helpers.ts'
-import Caption from "./Caption.astro";
+  isSpotifyURL,
+  isEmbeddableURL
+} from '../../../lib/blog-helpers.ts'
+import Caption from "../Caption.astro";
 
 import Bookmark from './Bookmark.astro'
 import TweetEmbed from './TweetEmbed.astro'
@@ -15,6 +17,8 @@ import TikTokEmbed from './TikTokEmbed.astro'
 import InstagramEmbed from './InstagramEmbed.astro'
 import PinterestEmbed from './PinterestEmbed.astro'
 import CodePenEmbed from './CodePenEmbed.astro'
+import EmbedGeneric from './EmbedGeneric.astro'
+import SpotifyEmbed from './SpotifyEmbed.astro'
 
 export interface Props {
   block: interfaces.Block
@@ -41,12 +45,16 @@ try {
       <PinterestEmbed url={url} />
     ) : isCodePenURL(url) ? (
       <CodePenEmbed url={url} />
-    ) : (
+    ) : isSpotifyURL(url)? (
+    <SpotifyEmbed url={url} />
+      ): await isEmbeddableURL(url) ? (
+      <EmbedGeneric url={url} />
+    ): (
       <Bookmark block={block} urlMap={urlMap} />
     )
   ) : null
 }
-<Caption richTexts={block.Embed.Caption} />
+<Caption richTexts={block.Embed?.Caption} />
 </div>
 
 <style>

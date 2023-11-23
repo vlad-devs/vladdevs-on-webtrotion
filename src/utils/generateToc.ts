@@ -55,15 +55,15 @@ function cleanHeading(heading: Block): Heading {
   // let subheadings: Heading[] = [];
   let depth = 0;
   if (heading.Type === "heading_1" && heading.Heading1) {
-    text = heading.Heading1?.RichTexts[0].PlainText;
+    text = heading.Heading1?.RichTexts[0]?.PlainText;
     depth = 1;
   }
   if (heading.Type === "heading_2" && heading.Heading2) {
-    text = heading.Heading2?.RichTexts[0].PlainText;
+    text = heading.Heading2?.RichTexts[0]?.PlainText;
     depth = 2;
   }
   if (heading.Type === "heading_3" && heading.Heading3) {
-    text = heading.Heading3?.RichTexts[0].PlainText;
+    text = heading.Heading3?.RichTexts[0]?.PlainText;
     depth = 3;
   }
 

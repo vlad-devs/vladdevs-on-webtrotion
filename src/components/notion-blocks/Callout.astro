@@ -11,7 +11,7 @@ export interface Props {
 
 const { block, headings } = Astro.props;
 ---
-<div class={`flex my-2 mx-auto py-4 px-3 w-full text-base font-normal leading-6 rounded border ${convertToTailwindColor(block.Callout.Color)} ${convertToTailwindColorForBorder(block.Callout.Color)}`}>
+<div class={`flex my-2 mx-auto py-4 px-3 w-full leading-6 rounded border ${convertToTailwindColor(block.Callout.Color)} ${convertToTailwindColorForBorder(block.Callout.Color)}`}>
     <div class="m-0 leading-6 mr-2">
         {
             block.Callout.Icon.Type === "emoji" ? (

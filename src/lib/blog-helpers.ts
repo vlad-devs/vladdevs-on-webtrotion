@@ -185,6 +185,17 @@ export const isPinterestURL = (url: URL): boolean => {
   return /\/pin\/[\d]+/.test(url.pathname)
 }
 
+export const isSpotifyURL = (url: URL): boolean => {
+  if (
+    url.hostname !== 'spotify.com' &&
+    url.hostname !== 'www.spotify.com' &&
+    url.hostname !== 'open.spotify.com'
+  ) {
+    return false
+  }
+  return /\/embed\//.test(url.pathname)
+}
+
 export const isCodePenURL = (url: URL): boolean => {
   if (url.hostname !== 'codepen.io' && url.hostname !== 'www.codepen.io') {
     return false
@@ -203,7 +214,8 @@ export const isFullAmazonURL = (url: URL): boolean => {
     url.hostname === 'amazon.com' ||
     url.hostname === 'www.amazon.com' ||
     url.hostname === 'amazon.co.jp' ||
-    url.hostname === 'www.amazon.co.jp'
+    url.hostname === 'www.amazon.co.jp' ||
+    url.hostname === 'www.amazon.in'
   ) {
     return true
   }
@@ -247,3 +259,27 @@ export const parseYouTubeVideoId = (url: URL): string => {
 
   return "";
 };
+
+export const isEmbeddableURL = async (url: URL): Promise<boolean> => {
+  try {
+    const urlString = url.toString();
+    const response = await fetch(urlString, { method: 'HEAD' });
+    const xFrameOptions = response.headers.get('x-frame-options');
+    const contentSecurityPolicy = response.headers.get('content-security-policy');
+
+    if (xFrameOptions && (xFrameOptions.toLowerCase() === 'deny' || xFrameOptions.toLowerCase() === 'sameorigin')) {
+      return false;
+    }
+
+    if (contentSecurityPolicy && contentSecurityPolicy.includes("frame-ancestors")) {
+      // Further parsing might be required here to interpret the CSP policy
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error checking URL: ', error);
+    return false;
+  }
+};
+

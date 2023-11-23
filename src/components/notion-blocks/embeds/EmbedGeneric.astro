@@ -1,0 +1,7 @@
+---
+export interface Props {
+  url: URL
+}
+const { url } = Astro.props
+---
+<iframe allowtransparency="true" class="w-full max-h-96 aspect-auto border-none" src={url.toString()} loading="lazy"></iframe>

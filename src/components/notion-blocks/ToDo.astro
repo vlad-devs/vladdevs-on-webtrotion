@@ -12,7 +12,7 @@ export interface Props {
 const { block, headings } = Astro.props;
 ---
 
-<div class="to-do font-normal text-base leading-7">
+<div class="to-do leading-7">
   {
     block.ListItems.filter((b: interfaces.Block) => b.Type === "to_do").map(
       (b: interfaces.Block, index) => (
