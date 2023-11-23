@@ -1,43 +1,56 @@
 ---
-import * as interfaces from "../../lib/interfaces.ts";
-import { isTweetURL } from "../../lib/blog-helpers.ts";
-import Bookmark from "./Bookmark.astro";
-import TweetEmbed from "./TweetEmbed.astro";
+import * as interfaces from '../../lib/interfaces.ts'
+import {
+  isTweetURL,
+  isTikTokURL,
+  isInstagramURL,
+  isPinterestURL,
+  isCodePenURL,
+} from '../../lib/blog-helpers.ts'
+import Caption from "./Caption.astro";
+
+import Bookmark from './Bookmark.astro'
+import TweetEmbed from './TweetEmbed.astro'
+import TikTokEmbed from './TikTokEmbed.astro'
+import InstagramEmbed from './InstagramEmbed.astro'
+import PinterestEmbed from './PinterestEmbed.astro'
+import CodePenEmbed from './CodePenEmbed.astro'
 
 export interface Props {
-	block: interfaces.Block;
-	urlMap: { [key: string]: string };
+  block: interfaces.Block
+  urlMap: { [key: string]: string }
 }
-
-const { block, urlMap } = Astro.props;
-
-let url: URL;
+const { block, urlMap } = Astro.props
+let url: URL
 try {
-	url = new URL(block.Embed.Url);
+  url = new URL(block.Embed.Url)
 } catch (err) {
-	console.log(err);
+  console.log(err)
 }
 ---
-
+<div class="embedded-info pb-2">
 {
-	url ? (
-		isTweetURL(url) ? (
-			<div class="tweet-embed">
-				<TweetEmbed url={url} />
-			</div>
-		) : (
-			<Bookmark block={block} urlMap={urlMap} />
-		)
-	) : null
+  url ? (
+    isTweetURL(url) ? (
+      <TweetEmbed url={url} />
+    ) : isTikTokURL(url) ? (
+      <TikTokEmbed url={url} />
+    ) : isInstagramURL(url) ? (
+      <InstagramEmbed url={url} />
+    ) : isPinterestURL(url) ? (
+      <PinterestEmbed url={url} />
+    ) : isCodePenURL(url) ? (
+      <CodePenEmbed url={url} />
+    ) : (
+      <Bookmark block={block} urlMap={urlMap} />
+    )
+  ) : null
 }
+<Caption richTexts={block.Embed.Caption} />
+</div>
 
 <style>
-	.tweet-embed {
-		width: 100%;
-		max-width: 600px;
-		margin: auto;
-	}
-	.tweet-embed div:first-child div:first-child {
-		margin: auto;
-	}
+  #instagram-embed-0{
+    min-width: unset !important;
+  }
 </style>

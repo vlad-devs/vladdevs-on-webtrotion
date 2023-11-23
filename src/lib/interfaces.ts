@@ -174,14 +174,17 @@ export interface Toggle {
 }
 
 export interface Embed {
+  Caption: RichText[];
   Url: string;
 }
 
 export interface Bookmark {
+  Caption: RichText[];
   Url: string;
 }
 
 export interface LinkPreview {
+  Caption: RichText[];
   Url: string;
 }
 

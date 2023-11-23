@@ -17,62 +17,23 @@ if (pageId) {
 ---
 
 {
-	post ? (
-		<a href={getPostLink(post.Slug)} class="link">
-			<>
-				<span class="icon">
-					{post.Icon && post.Icon.Type === "emoji" ? (
-						post.Icon.Emoji
-					) : post.Icon && post.Icon.Type === "external" ? (
-						<img src={post.Icon.Url} class="notion-icon" />
-					) : (
-						"📄"
-					)}
-				</span>
-				<span class="text">{post.Title}</span>
-			</>
-		</a>
-	) : (
-		<a class="link">
-			<span class="icon">🚫</span>
-			<span class="text not-found">Post not found</span>
-		</a>
-	)
+  post ? (
+      <a href={getPostLink(post.Slug)} class="inline-flex items-center justify-center p-2 text-base border font-medium text-gray-500 rounded-lg border-gray-50 hover:text-gray-900 hover:border-gray-100 dark:text-gray-400 dark:border-gray-800 dark:hover:border-gray-700 dark:hover:text-white">
+          <>
+              <span class="mx-2">
+                  {post.Icon && post.Icon.Type === "emoji" ? (
+                      post.Icon.Emoji
+                  ) : post.Icon && post.Icon.Type === "external" ? (
+                      <img src={post.Icon.Url} class="w-5 h-5 align-sub flex-shrink-0 relative" />
+                  ) : (
+                      "📄"
+                  )}
+              </span>
+              <span class="w-full">{post.Title}</span>
+              <svg class="w-4 h-4 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+  </svg>
+          </>
+      </a>
+  ) : null
 }
-
-<style>
-	a.link {
-		display: inline-flex;
-		font-weight: 600;
-		gap: 4px;
-	}
-	span.icon {
-		height: fit-content;
-		flex-shrink: 0;
-		position: relative;
-	}
-	span.icon img.notion-icon {
-		width: 1.3em;
-		height: 1.3rem;
-		vertical-align: sub;
-		flex-shrink: 0;
-		position: relative;
-	}
-	span.icon img.icon-link {
-		display: block;
-		position: absolute;
-		top: 1em;
-		right: 0;
-		width: 8px;
-		height: 8px;
-	}
-	span.text {
-		color: var(--fg);
-		font-weight: 500;
-		text-decoration: underline;
-	}
-	span.text.not-found {
-		font-weight: normal;
-		text-decoration: none;
-	}
-</style>

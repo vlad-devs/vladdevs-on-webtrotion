@@ -718,6 +718,7 @@ function _buildBlock(blockObject: responses.BlockObject): Block {
     case "embed":
       if (blockObject.embed) {
         const embed: Embed = {
+          Caption: blockObject.embed.caption?.map(_buildRichText) || [],
           Url: blockObject.embed.url,
         };
         block.Embed = embed;
@@ -726,6 +727,7 @@ function _buildBlock(blockObject: responses.BlockObject): Block {
     case "bookmark":
       if (blockObject.bookmark) {
         const bookmark: Bookmark = {
+          Caption: blockObject.bookmark.caption?.map(_buildRichText) || [],
           Url: blockObject.bookmark.url,
         };
         block.Bookmark = bookmark;
@@ -734,6 +736,7 @@ function _buildBlock(blockObject: responses.BlockObject): Block {
     case "link_preview":
       if (blockObject.link_preview) {
         const linkPreview: LinkPreview = {
+          Caption: blockObject.link_preview.caption?.map(_buildRichText) || [],
           Url: blockObject.link_preview.url,
         };
         block.LinkPreview = linkPreview;

@@ -4,6 +4,8 @@ import metascraperDescription from 'metascraper-description'
 import metascraperImage from 'metascraper-image'
 import metascraperTitle from 'metascraper-title'
 import * as interfaces from '../../lib/interfaces.ts'
+import Caption from "./Caption.astro";
+
 
 export interface Props {
   block: interfaces.Block
@@ -31,10 +33,10 @@ try {
   console.log(err)
 }
 ---
-
+<div class="bookmark pb-2">
 {
   url && (
-    <div class="flex overflow-hidden w-full max-w-full text-sm pb-2">
+    <div class="flex overflow-hidden w-full max-w-full text-sm">
       <a href={url.toString()} target="_blank" rel="noopener noreferrer" class="w-fill no-underline border border-gray-700 dark:border-gray-100 rounded flex overflow-hidden select-none">
         <div class="p-3 overflow-hidden text-left text-gray-900 dark:text-gray-100">
           <div class="text-base leading-5 whitespace-nowrap overflow-hidden trncate h-6 mb-0.5">{metadata && metadata.title}</div>
@@ -65,6 +67,9 @@ try {
     </div>
   )
 }
+<Caption richTexts={(block.Bookmark || block.LinkPreview || block.Embed).Caption} />
+</div>
+
 
 <style>
 .flex-bookmark-image{
