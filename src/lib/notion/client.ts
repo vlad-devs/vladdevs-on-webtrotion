@@ -1016,7 +1016,7 @@ function _buildRichText(richTextObject: responses.RichTextObject): RichText {
   if (richTextObject.href?.startsWith("/")) {
     if (richTextObject.href?.includes("#")) {
       const reference: Reference = {
-        PageId: richTextObject.href.split("#")[0].substring(1),
+        PageId: richTextObject.href.split("#")[0].substring(1).replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5'),
         BlockId: richTextObject.href.split("#")[1],
         Type: "block"
       };

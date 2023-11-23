@@ -2,6 +2,9 @@
 import { buildHeadingId } from "../../../lib/blog-helpers.ts";
 import { RichText } from "../../../lib/interfaces.ts";
 import {getBlock} from "../../../lib/notion/client.ts";
+import { Post } from "../../../lib/interfaces.ts";
+import { getPostByPageId } from "../../../lib/notion/client";
+import { getPostLink } from "../../../lib/blog-helpers.ts";
 
 export interface Props {
 	richText: RichText;
@@ -10,8 +13,15 @@ export interface Props {
 const { richText } = Astro.props;
 let block_linked = null;
 let block_linked_id = null;
+let post: Post = null;
+let pageId = null
+
 if (richText.InternalHref?.BlockId)
 {
+  pageId = richText.InternalHref?.PageId;
+  if (pageId) {
+    post = await getPostByPageId(pageId);
+  }
   block_linked = await getBlock(richText.InternalHref?.BlockId);
   if (block_linked.Heading1 || block_linked.Heading2 || block_linked.Heading3)
   {
@@ -25,9 +35,11 @@ if (richText.InternalHref?.BlockId)
 	/* prettier-ignore */
 	richText.Href && !richText.Mention && !richText.InternalHref? (
     <a href={richText.Href} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
-  ) : block_linked_id?(
-    <a href={`#${block_linked_id}`} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
-  ):(
+  ) : block_linked_id && post?(
+    <a href={`${getPostLink(post.Slug)}#${block_linked_id}`} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
+  ): post?( <a href={getPostLink(post.Slug)} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
+  ):
+  (
     <slot />
   )
 }
