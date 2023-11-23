@@ -1,0 +1,95 @@
+---
+import PageLayout from "../layouts/Base.astro"
+import PostPreview from "../components/blog/PostPreview.astro";
+import {
+	downloadFile,
+	getAllBlocksByBlockId,
+	getBlock,
+	getPages,
+	getRankedPosts,
+} from "@/lib/notion/client";
+import { extractTargetBlocks } from "../lib/blog-helpers";
+import NotionBlocks from "../components/NotionBlocks.astro";
+import type { Post } from "../lib/interfaces";
+
+import { siteConfig } from "@/site.config";
+
+export async function getStaticPaths() {
+	const pages = await getPages();
+
+	return pages.map((page) => ({
+		params: { page: page.Slug === siteConfig.homePageSlug ? undefined : `/${page.Slug}` },
+		props: { page },
+	}));
+}
+
+interface Props {
+	page: Post;
+}
+
+const { page: slug } = Astro.params;
+const { page } = Astro.props;
+
+if (!page) {
+	throw new Error("Page not found");
+}
+
+const [blocks, rankedPosts] = await Promise.all([
+	getAllBlocksByBlockId(page.PageId),
+	getRankedPosts(),
+]);
+
+const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
+	.concat(extractTargetBlocks("file", blocks))
+	.filter((block) => {
+		if (!block) {
+			return false;
+		}
+		const imageOrFile = block.NImage || block.File;
+		return imageOrFile && imageOrFile.File && imageOrFile.File.Url;
+	});
+
+// Download files
+await Promise.all(
+	fileAtacchedBlocks
+		.map(async (block) => {
+			const expiryTime = (block.NImage || block.File).File.ExpiryTime;
+			if (Date.parse(expiryTime) > Date.now()) {
+				return Promise.resolve(block);
+			}
+			return getBlock(block.Id);
+		})
+		.map((promise) =>
+			promise.then((block) => {
+				try {
+					let url = new URL((block.NImage || block.File).File.Url);
+					return Promise.resolve(url);
+				} catch (err) {
+					console.log("Invalid file URL");
+					return Promise.reject();
+				}
+			}),
+		)
+		.map((promise) => promise.then(downloadFile)),
+);
+---
+
+<PageLayout meta={{ title: page.Title || siteConfig.title }}>
+	<section>
+		<NotionBlocks blocks={blocks} isRoot={true} />
+	</section>
+	{
+		!slug && (
+			<section aria-label="Blog post list" class="mt-16">
+				<h2 class="title mb-4 text-xl">Posts</h2>
+				<ul class="space-y-4 sm:space-y-2">
+					{rankedPosts.map((p) => (
+						<li class="flex flex-col gap-x-2 sm:flex-row">
+							<PostPreview post={p} />
+						</li>
+					))}
+				</ul>
+			</section>
+		)
+	}
+</PageLayout>
