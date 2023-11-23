@@ -13,7 +13,7 @@ const { headings } = Astro.props;
 const toc = generateToc(headings);
 ---
 
-<aside class="sticky top-20 order-2 -me-32 hidden basis-64 lg:block">
+<aside class="toc sticky top-20 order-2 -me-32 hidden basis-64 lg:block">
 	{
 		!!toc.length && (
 			<>

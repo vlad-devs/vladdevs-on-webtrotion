@@ -1,4 +1,4 @@
-//ADDED
+//NOTE ADDED
 import { getDatabase, getPages } from "@/lib/notion/client";
 import { siteConfig } from "@/site.config";
 import type { Block, BlockTypes } from "@/lib/interfaces";
@@ -26,7 +26,7 @@ export const pathJoin = (path: string, subPath: string) => {
   )
 }
 
-//ADDED FROM HERE ON
+//NOTE ADDED FROM HERE ON
 
 export async function getCollections() {
   const { propertiesRaw } = await getDatabase();
