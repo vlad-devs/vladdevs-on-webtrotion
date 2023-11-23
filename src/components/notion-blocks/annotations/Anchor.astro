@@ -1,18 +1,33 @@
 ---
+import { buildHeadingId } from "../../../lib/blog-helpers.ts";
 import { RichText } from "../../../lib/interfaces.ts";
+import {getBlock} from "../../../lib/notion/client.ts";
 
 export interface Props {
 	richText: RichText;
 }
 
 const { richText } = Astro.props;
+let block_linked = null;
+let block_linked_id = null;
+if (richText.InternalHref?.BlockId)
+{
+  block_linked = await getBlock(richText.InternalHref?.BlockId);
+  if (block_linked.Heading1 || block_linked.Heading2 || block_linked.Heading3)
+  {
+    block_linked_id = buildHeadingId(block_linked.Heading1 || block_linked.Heading2 || block_linked.Heading3);
+  }
+  console.log(block_linked, block_linked_id);
+}
 ---
 
 {
 	/* prettier-ignore */
 	richText.Href && !richText.Mention && !richText.InternalHref? (
     <a href={richText.Href} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
-  ) : (
+  ) : block_linked_id?(
+    <a href={`#${block_linked_id}`} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
+  ):(
     <slot />
   )
 }

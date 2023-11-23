@@ -594,7 +594,7 @@ function _buildBlock(blockObject: responses.BlockObject): Block {
             Type: blockObject.video.type,
             Url: blockObject.video.file.url,
             ExpiryTime: blockObject.video.file.expiry_time,
-            Size: blockObject.video.file.size,
+            // Size: blockObject.video.file.size,
           };
         }
         block.Video = video;
@@ -1016,16 +1016,16 @@ function _buildRichText(richTextObject: responses.RichTextObject): RichText {
   if (richTextObject.href?.startsWith("/")) {
     if (richTextObject.href?.includes("#")) {
       const reference: Reference = {
-        PageId: richTextObject.href.substring(1),
-        Type: "page"
+        PageId: richTextObject.href.split("#")[0].substring(1),
+        BlockId: richTextObject.href.split("#")[1],
+        Type: "block"
       };
       richText.InternalHref = reference;
     }
     else {
       const reference: Reference = {
-        PageId: richTextObject.href.split("#")[0].substring(1),
-        BlockId: richTextObject.href.split("#")[1],
-        Type: "block"
+        PageId: richTextObject.href.substring(1),
+        Type: "page"
       };
       richText.InternalHref = reference;
     }
