@@ -1,3 +1,5 @@
+import { Icon } from 'astro-icon';
+
 // eslint-disable-next-line prettier/prettier
 export const convertToTailwindColor = (s: string) => {
   // Convert snake_case to kebab-case
@@ -56,3 +58,12 @@ export const convertToTailwindColorForBorder = (s: string) => {
   // Return the Tailwind color classes, defaulting to the input if no mapping is found
   return colorMap[kebabCase];
 };
+
+export const emojiToAstroIcon = (emoji: string) => {
+  const emojiIconMap = {
+    "🗓️": "mdi:calendar-blank",
+  }
+  if (emoji in emojiIconMap) {
+    return emojiIconMap[emoji];
+  }
+}

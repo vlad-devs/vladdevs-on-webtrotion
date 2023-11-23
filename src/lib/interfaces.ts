@@ -234,6 +234,7 @@ export interface RichText {
   Href?: string;
   Equation?: Equation;
   Mention?: Mention;
+  InternalHref?: Reference;
 }
 
 export interface Text {
@@ -273,10 +274,13 @@ export interface LinkToPage {
 export interface Mention {
   Type: string;
   Page?: Reference;
+  DateStr?: string;
 }
 
 export interface Reference {
-  Id: string;
+  PageId: string;
+  Type: string;
+  BlockId?: string;
 }
 
 export type BlockTypes =

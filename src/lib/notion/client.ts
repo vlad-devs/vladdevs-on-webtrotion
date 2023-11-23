@@ -1013,6 +1013,24 @@ function _buildRichText(richTextObject: responses.RichTextObject): RichText {
     Href: richTextObject.href,
   };
 
+  if (richTextObject.href?.startsWith("/")) {
+    if (richTextObject.href?.includes("#")) {
+      const reference: Reference = {
+        PageId: richTextObject.href.substring(1),
+        Type: "page"
+      };
+      richText.InternalHref = reference;
+    }
+    else {
+      const reference: Reference = {
+        PageId: richTextObject.href.split("#")[0].substring(1),
+        BlockId: richTextObject.href.split("#")[1],
+        Type: "block"
+      };
+      richText.InternalHref = reference;
+    }
+  }
+
   if (richTextObject.type === "text" && richTextObject.text) {
     const text: Text = {
       Content: richTextObject.text.content,
@@ -1037,9 +1055,13 @@ function _buildRichText(richTextObject: responses.RichTextObject): RichText {
 
     if (richTextObject.mention.type === "page" && richTextObject.mention.page) {
       const reference: Reference = {
-        Id: richTextObject.mention.page.id,
+        PageId: richTextObject.mention.page.id,
+        Type: richTextObject.mention.type
       };
       mention.Page = reference;
+    }
+    else if (richTextObject.mention.type === "date") {
+      mention.DateStr = richTextObject.plain_text;
     }
 
     richText.Mention = mention;
