@@ -12,12 +12,12 @@ export interface Props {
 
 const { block, level, headings } = Astro.props;
 
-const listTypes = ["i", "1", "a"];
+const listTypes = ["lower-roman", "decimal", "lower-alpha"];
 ---
-
+<div class="numbered-list">
 <ol
-	class="list-inside list-decimal space-y-4 text-gray-500 dark:text-gray-400 pl-2"
-	type={listTypes[level % 3]}
+	class="list-inside text-gray-500 dark:text-gray-400 pl-2"
+  style={`list-style-type: ${listTypes[level % 3]} !important;`}
 >
 	{
 		block.ListItems.filter((b: interfaces.Block) => b.Type === "numbered_list_item").map(
@@ -38,3 +38,5 @@ const listTypes = ["i", "1", "a"];
 		)
 	}
 </ol>
+</div>
+
