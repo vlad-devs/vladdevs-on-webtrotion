@@ -16,9 +16,13 @@ const id = buildHeadingId(block.Heading2);
 
 {
 	block.Heading2.IsToggleable ? (
-		<details class="toggle mb-0 mt-8">
-			<summary class="cursor-pointer">
+  <details class="toggle mb-0 mt-8 group">
+			<summary class="flex cursor-pointer list-none items-center gap-4">
+        <svg class="-rotate-90 transform transition-all duration-300 group-open:rotate-180" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
 				<a
+        class="inline"
 					href={`#${id}`}
 					id={id}
 					onclick="var fullUrl = `${window.location.origin}${window.location.pathname}#${id}`; navigator.clipboard.writeText(fullUrl);"
@@ -30,7 +34,7 @@ const id = buildHeadingId(block.Heading2);
 					</h3>
 				</a>
 			</summary>
-			<div class="ml-4">
+			<div class="pl-10">
 				{block.Heading2.Children && (
 					<NotionBlocks blocks={block.Heading2.Children} headings={headings} />
 				)}

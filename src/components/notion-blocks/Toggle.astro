@@ -12,8 +12,24 @@ export interface Props {
 const { block, headings } = Astro.props;
 ---
 
+<details class={`toggle group ${convertToTailwindColor(block.Toggle.Color)}`}>
+	<summary class="flex cursor-pointer list-none items-center gap-4 text-base">
+    <svg class="-rotate-90 transform transition-all duration-300 group-open:rotate-180" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+		{
+			block.Toggle.RichTexts.map((richText: interfaces.RichText) => (
+				<RichText richText={richText} />
+			))
+		}
+	</summary>
+	<div class="pl-10">
+		<NotionBlocks blocks={block.Toggle.Children} headings={headings} />
+	</div>
+</details>
+
 <details class={`toggle p-2 ${convertToTailwindColor(block.Toggle.Color)}`}>
-	<summary class="flex cursor-pointer list-none items-center gap-4">
+	<summary class="flex cursor-pointer">
 		{
 			block.Toggle.RichTexts.map((richText: interfaces.RichText) => (
 				<RichText richText={richText} />
