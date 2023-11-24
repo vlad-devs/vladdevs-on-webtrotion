@@ -33,11 +33,13 @@ const { page } = Astro.props;
 if (!page) {
 	throw new Error("Page not found");
 }
+//NOTE: later if i want posts on my home page which i very well might!
+// const [blocks, rankedPosts] = await Promise.all([
+// 	getAllBlocksByBlockId(page.PageId),
+// 	getRankedPosts(),
+// ]);
 
-const [blocks, rankedPosts] = await Promise.all([
-	getAllBlocksByBlockId(page.PageId),
-	getRankedPosts(),
-]);
+const blocks = await getAllBlocksByBlockId(page.PageId);
 
 const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 	.concat(extractTargetBlocks("file", blocks))
