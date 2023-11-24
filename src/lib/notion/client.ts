@@ -1039,13 +1039,7 @@ function _buildPost(pageObject: responses.PageObject): Post {
         : "",
     FeaturedImage: featuredImage,
     Rank: prop.Rank.number ? prop.Rank.number : 0,
-    HideToC: prop["Hide ToC"] ? prop["Hide ToC"].checkbox : false,
     LastUpdatedDate: prop['Last Updated Date']?.formula?.date ? prop['Last Updated Date']?.formula.date.start : "",
-    TypeIsData: prop["Type Is Data?"] ? prop["Type Is Data?"].checkbox : false,
-    ParentDataCollectorPage: prop["Parent Data Collector Page"]?.relation && prop["Parent Data Collector Page"].relation.length > 0 && prop["Parent Data Collector Page"].relation[0] ? { PageId: prop["Parent Data Collector Page"].relation[0].id, Type: "page" } : null,
-    DataItems: prop["Data Items"]?.relation && prop["Data Items"].relation.length > 0
-      ? prop["Data Items"].relation.map(item => ({ PageId: item.id, Type: "page" }))
-      : null,
     RelatedPages: prop["Related Pages"]?.relation && prop["Related Pages"].relation.length > 0
       ? prop["Related Pages"].relation.map(item => ({ PageId: item.id, Type: "page" }))
       : null,

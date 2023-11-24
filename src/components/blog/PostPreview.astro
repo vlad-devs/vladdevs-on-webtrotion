@@ -20,7 +20,6 @@ interface Props {
 
 const { post, as: Tag = "div", withDesc = false } = Astro.props;
 
-const fullPost = (await getPostBySlug(post.Slug)) as Post;
 //TODO: what is this?
 // const postDate = post.data.updatedDate ?? post.data.publishDate;
 ---
@@ -32,14 +31,14 @@ const fullPost = (await getPostBySlug(post.Slug)) as Post;
 	</a>
 </Tag>
 {withDesc && <q class="line-clamp-3 block italic">{post.data.description}</q>} -->
-<FormattedDate date={new Date(fullPost.Date)} class="min-w-[120px] text-gray-500" />
+<FormattedDate date={new Date(post.Date)} class="min-w-[120px] text-gray-500" />
 <Tag>
 	<a
-		href={`/posts/${fullPost.Slug}/`}
+		href={`/posts/${post.Slug}/`}
 		class="cactus-link"
 		rel="prefetch"
 	>
-		{fullPost.Title}
+		{post.Title}
 	</a>
 </Tag>
-{withDesc && <q class="line-clamp-3 block italic">{fullPost.Excerpt}</q>}
+{withDesc && <q class="line-clamp-3 block italic">{post.Excerpt}</q>}
