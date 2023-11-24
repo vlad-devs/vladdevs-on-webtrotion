@@ -16,9 +16,9 @@ const id = buildHeadingId(block.Heading1);
 
 {
 	block.Heading1.IsToggleable ? (
-		<details class="toggle mb-0 mt-8 group">
+		<details class="toggle mb-0 mt-8">
 			<summary class="flex cursor-pointer list-none gap-2">
-        <svg class="flex-shrink-0 mt-1 transition-all duration-300 group-open:-rotate-90" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+        <svg class="flex-shrink-0 mt-1 transition-all duration-300 rotate-svg" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
       <polyline points="12 8 18 14 12 20"></polyline>
     </svg>
 				<a
@@ -68,5 +68,8 @@ h2::after {
 
 h2:hover::after {
     opacity: 1; /* Make the content visible on hover */
+}
+details[open] > summary > div >.flex-shrink-0.rotate-svg {
+  transform: rotate(-90deg);
 }
 </style>
