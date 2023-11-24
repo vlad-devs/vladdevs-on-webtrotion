@@ -8,6 +8,8 @@ import { getAllPosts, getUniqueTags } from "@/lib/notion/client";
 import type { Post, SelectProperty } from "@/lib/interfaces";
 import { getCollections} from "@/utils";
 import slugify from '@sindresorhus/slugify';
+import { convertToTailwindColor, convertToTailwindColorForBorder } from "@/lib/style-helpers";
+
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const posts = await getAllPosts();
@@ -91,11 +93,11 @@ const paginationProps = {
 						</svg>
 						Tags
 					</h2>
-					<ul class="flex flex-wrap gap-2 text-bgColor">
+					<ul class="flex flex-wrap gap-2">
 						{uniqueTags.map((tag) => (
 							<li>
 								<a
-									class="flex items-center justify-center rounded-lg bg-accent p-1"
+                class={`flex items-center justify-center rounded-lg p-1 border ${convertToTailwindColor(tag.color+"-background")} ${convertToTailwindColorForBorder(tag.color+"-background")}`}
 									href={`/tags/${tag.name}/`}
 									aria-label={`View all posts with the tag: ${tag.name}`}
 								>
