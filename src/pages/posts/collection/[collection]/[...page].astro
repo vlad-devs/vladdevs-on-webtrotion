@@ -3,6 +3,7 @@
 import type { GetStaticPaths, Page } from "astro";
 import PageLayout from "src/layouts/Base.astro";
 import PostPreview from "src/components/blog/PostPreview.astro";
+import PostPreviewFull from "src/components/blog/PostPreviewFull.astro";
 import Pagination from "src/components/Paginator.astro";
 import { getAllPosts, getUniqueTags } from "@/lib/notion/client";
 import type { Post, SelectProperty } from "@/lib/interfaces";
@@ -10,7 +11,6 @@ import { getCollections} from "@/utils";
 import slugify from '@sindresorhus/slugify';
 import { convertToTailwindColor, convertToTailwindColorForBorder } from "@/lib/style-helpers";
 import { FULL_PREVIEW_COLLECTIONS } from "@/constants";
-
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const posts = await getAllPosts();
