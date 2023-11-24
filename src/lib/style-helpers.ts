@@ -59,11 +59,14 @@ export const convertToTailwindColorForBorder = (s: string) => {
   return colorMap[kebabCase];
 };
 
-export const emojiToAstroIcon = (emoji: string) => {
-  const emojiIconMap = {
+export const textToAstroIcon = (text: string) => {
+  const textIconMap = {
     "🗓️": "mdi:calendar-blank",
+    "download": "mdi:download-circle",
+    "copy-code": "mdi:content-copy",
+    "copied-to-clipboard": "mdi:clipboard-check"
   }
-  if (emoji in emojiIconMap) {
-    return emojiIconMap[emoji];
+  if (text in textIconMap) {
+    return textIconMap[text];
   }
 }

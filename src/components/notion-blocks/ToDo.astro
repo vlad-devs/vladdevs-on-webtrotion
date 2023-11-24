@@ -35,11 +35,11 @@ const { block, headings } = Astro.props;
                   return (
                   <span class="line-through block">
                       {/* Block element for the text */}
-                      <RichText richText={richText} />
+                      <RichText richText={richText}  blockID={block.Id}/>
                     </span>
                   );
                 }
-                return <RichText richText={richText} class="block" />;
+                return <RichText richText={richText}  blockID={block.Id} class="block" />;
               })}
             </div>
           </div>

@@ -24,7 +24,7 @@ const { block } = Astro.props;
 										class="bg-gray-100 px-6 py-3 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
 									>
 										{cell.RichTexts.map((richText: interfaces.RichText) => (
-											<RichText richText={richText} />
+											<RichText richText={richText}  blockID={block.Id}/>
 										))}
 									</th>
 								);
@@ -36,7 +36,7 @@ const { block } = Astro.props;
 										class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
 									>
 										{cell.RichTexts.map((richText: interfaces.RichText) => (
-											<RichText richText={richText} />
+											<RichText richText={richText}  blockID={block.Id}/>
 										))}
 									</th>
 								);
@@ -44,7 +44,7 @@ const { block } = Astro.props;
 							return (
 								<td class="px-6 py-4">
 									{cell.RichTexts.map((richText: interfaces.RichText) => (
-										<RichText richText={richText} />
+										<RichText richText={richText}  blockID={block.Id}/>
 									))}
 								</td>
 							);

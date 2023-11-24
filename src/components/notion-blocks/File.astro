@@ -1,6 +1,9 @@
 ---
 import * as interfaces from "../../lib/interfaces";
 import { filePath } from "../../lib/blog-helpers";
+import { textToAstroIcon } from "@/lib/style-helpers";
+import { Icon } from 'astro-icon';
+
 
 export interface Props {
 	block: interfaces.Block;
@@ -21,21 +24,17 @@ const filename = decodeURIComponent(url.pathname.split("/").slice(-1)[0]);
 	{
 		url && (
 			<div>
+
 				{block.File.Caption && block.File.Caption.length > 0 && block.File.Caption[0].Text.Content? block.File.Caption[0].Text.Content : filename}
-				{" ["}
-				<a
+        {"  "}
+        <a
 					href={block.File.External ? url.String() : filePath(url)}
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					<span>Download</span>
-					<img
-						src="https://www.notion.so/icons/document_gray.svg"
-						alt="Document Icon"
-						class="inline h-4 w-4 align-middle"
-					/>
+					<span class="inline-flex items-center justify-center p-2 text-base border-2 font-medium rounded-lg border-gray-200 hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-700">Download <Icon name={textToAstroIcon("download")} class="inline h-5 w-5" /></span>
+
 				</a>
-				{"]"}
 			</div>
 		)
 	}

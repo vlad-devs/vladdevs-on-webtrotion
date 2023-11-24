@@ -24,7 +24,7 @@ const listTypes = ["lower-roman", "decimal", "lower-alpha"];
 			(b: interfaces.Block) => (
 				<li class={convertToTailwindColor(b.NumberedListItem.Color)}>
 					{b.NumberedListItem.RichTexts.map((richText: interfaces.RichText) => (
-						<RichText richText={richText} />
+						<RichText richText={richText}  blockID={block.Id}/>
 					))}
 					{b.HasChildren && (
 						<NotionBlocks

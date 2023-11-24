@@ -66,6 +66,7 @@ interface Parent {
   type: string;
   database_id?: string;
   page_id?: string;
+  block_id?: string;
 }
 
 export interface RichTextObject {
@@ -327,6 +328,7 @@ export interface BlockObject {
   has_children: boolean;
   archived: boolean;
   type: BlockTypes;
+  parent: Parent;
 
   paragraph?: Paragraph;
   heading_1?: Heading;

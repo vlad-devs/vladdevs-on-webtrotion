@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import slugify from '@sindresorhus/slugify';
 import axios from "axios";
 import type { AxiosResponse } from "axios";
 import sharp from "sharp";
@@ -56,6 +55,8 @@ import type {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { Client, APIResponseError } from "@notionhq/client";
 import { ONLY_PAGES, ONLY_POSTS, FOR_THIS_SITE, filterBySlug, filterByTag, filterByPageID } from "../filters";
+import { getFormattedDateWithTime } from "@/utils";
+
 
 const client = new Client({
   auth: NOTION_API_SECRET,
@@ -348,6 +349,45 @@ export async function getBlock(blockId: string): Promise<Block> {
   );
 
   return _buildBlock(res);
+}
+
+export async function getBlockParentPageId(blockId: string): Promise<string | null> {
+  let parent_page_id = null;
+
+  while (true) {
+    let params: requestParams.RetrieveBlock = {
+      block_id: blockId,
+    };
+    let res = await retry(
+      async (bail) => {
+        try {
+          return (await client.blocks.retrieve(
+            params as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+          )) as responses.RetrieveBlockResponse;
+        } catch (error: unknown) {
+          if (error instanceof APIResponseError) {
+            if (error.status && error.status >= 400 && error.status < 500) {
+              bail(error);
+            }
+          }
+          throw error;
+        }
+      },
+      {
+        retries: numberOfRetry,
+      },
+    );
+    if (res.parent.type == "block_id") {
+      blockId = res.parent.block_id;
+    }
+    else if (res.parent.type == "page_id") {
+      parent_page_id = res.parent.page_id;
+      break;
+    }
+    else { break; }
+  }
+
+  return parent_page_id;
 }
 
 export function getUniqueTags(posts: Post[]) {
@@ -1078,7 +1118,9 @@ function _buildRichText(richTextObject: responses.RichTextObject): RichText {
       mention.Page = reference;
     }
     else if (richTextObject.mention.type === "date") {
-      mention.DateStr = richTextObject.plain_text;
+      let formatted_date = richTextObject.mention.date?.start ? richTextObject.mention.date?.end ? getFormattedDateWithTime(richTextObject.mention.date?.start) + " to " + getFormattedDateWithTime(richTextObject.mention.date?.end) : getFormattedDateWithTime(richTextObject.mention.date?.start) : "Invalid Date";
+
+      mention.DateStr = formatted_date;
     }
 
     richText.Mention = mention;

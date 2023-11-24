@@ -15,7 +15,7 @@ const { block, headings } = Astro.props;
 <p class={convertToTailwindColor(block.Paragraph.Color)}>
 	{
 		block.Paragraph.RichTexts.map((richText: interfaces.RichText) => (
-			<RichText richText={richText} />
+			<RichText richText={richText}  blockID={block.Id}/>
 		))
 	}
 	{

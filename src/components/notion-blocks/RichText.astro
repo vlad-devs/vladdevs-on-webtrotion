@@ -12,13 +12,14 @@ import MentionPage from './MentionPage.astro'
 import MentionDate from './MentionDate.astro'
 
 export interface Props {
-  richText: RichText
+  richText: RichText,
+  blockID?: string
 }
 
-const { richText } = Astro.props
+const { richText, blockID } = Astro.props
 ---
 
-<Anchor richText={richText}>
+<Anchor richText={richText} blockID={blockID}>
   {
     (
       <Code richText={richText}>
