@@ -67,17 +67,19 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 // const postDate = post.data.updatedDate ?? post.data.publishDate;
 ---
 <FormattedDate date={new Date(post_full_preview.Date)} class="min-w-[120px] text-gray-500" />
-<Tag>
+
 	<a
     href={`#${post_full_preview.Slug}`}
 					id={post_full_preview.Slug}
-					onclick="var fullUrl = `${window.location.origin}${window.location.pathname}#${post_full_preview.Slug}`; navigator.clipboard.writeText(fullUrl);"
+					onclick="var fullUrl = `${window.location.origin}${window.location.pathname}#${id}`; navigator.clipboard.writeText(fullUrl);"
 		class="inline"
 		rel="prefetch"
 	>
+  <Tag class="mb-4 mt-8 text-2xl font-normal">
 		{post_full_preview.Title}
+  </Tag>
 	</a>
-</Tag>
+
 {withDesc && <q class="line-clamp-3 block italic">{post_full_preview.Excerpt}</q>}
 {
 	post_full_preview.Tags.length > 0 && (
@@ -121,16 +123,16 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 </section>
 
 <style>
-  h2::after {
+  h2::before {
       content: "#";
       color: var(--accent);
-      margin-left: 2rem;
+      margin-left: -1rem;
       display: inline-block;
       opacity: 0; /* Start with invisible content */
       transition: opacity 0.3s ease; /* Transition the opacity */
   }
 
-  h2:hover::after {
+  h2:hover::before {
       opacity: 1; /* Make the content visible on hover */
   }
   </style>

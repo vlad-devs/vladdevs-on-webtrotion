@@ -57,16 +57,16 @@ const id = buildHeadingId(block.Heading3);
 }
 
 <style>
-h4::after {
+h4::before {
     content: "#";
     color: var(--accent);
-    margin-left: 2rem;
+    margin-left: -1rem;
     display: inline-block;
     opacity: 0; /* Start with invisible content */
     transition: opacity 0.3s ease; /* Transition the opacity */
 }
 
-h4:hover::after {
+h4:hover::before {
     opacity: 1; /* Make the content visible on hover */
 }
 details[open] > summary > div >.flex-shrink-0.rotate-svg {
