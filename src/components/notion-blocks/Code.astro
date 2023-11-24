@@ -35,36 +35,25 @@ const grammar = Prism.languages[language.toLowerCase()] || Prism.languages.javas
 ---
 
 <div class="code w-full mb-1 font-mono relative">
-	<div class="bg-gray-100 text-gray-600 rounded">
+	<div>
+          <div class="flex">
+            <button class="copy border-0 p-2 cursor-pointer absolute top-0 right-0" data-code={"```"+language+"\n"+code+"```"} >
+              <svg class="inline h-5 w-5 transition-colors duration-300 svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path fill="white" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1Z"/>
+              </svg>
+            </button>
+          </div>
 		{
+
 			language === 'mermaid' ? (
-        <>
-          <div class="flex">
-            <button class="copy border-0 p-2 cursor-pointer absolute top-0 right-0" data-code={code} >
-              <svg class="inline h-5 w-5 transition-colors duration-300 svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1Z"/>
-              </svg>
-            </button>
-          </div>
-         <pre class="mermaid p-2">{code}</pre>
-        </>
+         <pre class="rounded mermaid p-4">{code}</pre>
       ) : (
-        <>
-          <div class="flex">
-            <button class="copy border-0 p-2 cursor-pointer absolute top-0 right-0" data-code={code} >
-              <svg class="inline h-5 w-5 transition-colors duration-300 svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1Z"/>
-              </svg>
-            </button>
-          </div>
-          <pre class="whitespace-pre-wrap p-2 overflow-auto"><code set:html={Prism.highlight(code, grammar, language)} /></pre>
-        </>
+          <pre class={`rounded whitespace-pre-wrap p-4 overflow-auto break-normal leading-6 tabular-nums text-left no-hyphens bg-blue-950 text-sky-600 ${"language-"+language}`}><code set:html={Prism.highlight(code, grammar, language)} /></pre>
       )
 		}
 	</div>
 	<Caption richTexts={block.Code.Caption} />
 </div>
-
 
 <script>
 	import mermaid from "mermaid";
@@ -78,10 +67,10 @@ const grammar = Prism.languages[language.toLowerCase()] || Prism.languages.javas
     const code = ev.currentTarget.getAttribute("data-code");
     navigator.clipboard.writeText(code);
     if (svg) {
-      svg.setAttribute("fill", "green");
+      svg.setAttribute("fill", "limegreen");
       setTimeout(() => {
-        svg.setAttribute("fill", "currentColor");
-      }, 3000);
+        svg.setAttribute("fill", "white");
+      }, 1000);
     }
   });
 });
