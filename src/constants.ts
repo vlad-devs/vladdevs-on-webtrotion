@@ -20,4 +20,4 @@ export const HEADING_BLOCKS = ["heading_1", "heading_2", "heading_3"];
 
 export const PUBLISH_ON_FILTER = "nerdymomocat.github.io";
 
-export const FULL_PREVIEW_COLLECTIONS = ["Stream"]
+export const FULL_PREVIEW_COLLECTIONS = ["Stream"];

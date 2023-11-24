@@ -9,6 +9,7 @@ import type { Post, SelectProperty } from "@/lib/interfaces";
 import { getCollections} from "@/utils";
 import slugify from '@sindresorhus/slugify';
 import { convertToTailwindColor, convertToTailwindColorForBorder } from "@/lib/style-helpers";
+import { FULL_PREVIEW_COLLECTIONS } from "@/constants";
 
 
 export const getStaticPaths = (async ({ paginate }) => {
@@ -63,9 +64,12 @@ const paginationProps = {
 			<ul class="space-y-8 text-start">
 				{
 					page.data.map((post) => (
-						<li class="flex flex-col flex-wrap gap-2 sm:flex-row [&_q]:basis-full">
+            FULL_PREVIEW_COLLECTIONS.includes(collection)?
+						(<li class="flex flex-col flex-wrap gap-2 sm:flex-row [&_q]:basis-full">
+							{"MEEEEEEE"}<PostPreview post={post} as="h2" withDesc />
+						</li>):(<li class="flex flex-col flex-wrap gap-2 sm:flex-row [&_q]:basis-full">
 							<PostPreview post={post} as="h2" withDesc />
-						</li>
+						</li>)
 					))
 				}
 			</ul>
