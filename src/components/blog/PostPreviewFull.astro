@@ -75,7 +75,7 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 		class="inline"
 		rel="prefetch"
 	>
-  <Tag class="mb-4 mt-8 text-2xl font-normal">
+  <Tag class="mt-2 mb-2 text-2xl font-normal relative">
 		{post_full_preview.Title}
   </Tag>
 	</a>
@@ -125,8 +125,9 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 <style>
   h2::before {
       content: "#";
+      position: absolute;
       color: var(--accent);
-      margin-left: -1rem;
+      margin-left: -1.5rem;
       display: inline-block;
       opacity: 0; /* Start with invisible content */
       transition: opacity 0.3s ease; /* Transition the opacity */
