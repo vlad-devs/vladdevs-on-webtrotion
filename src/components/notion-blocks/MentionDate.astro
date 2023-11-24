@@ -1,6 +1,8 @@
 ---
 import { Icon } from 'astro-icon';
 import {emojiToAstroIcon} from "../../lib/style-helpers.ts";
+import { getFormattedDate } from "@/utils";
+
 
 export interface Props {
 	mention_date: string;
@@ -14,4 +16,4 @@ const icon_name = emojiToAstroIcon(emoji);
   icon_name
     ? <Icon name={icon_name} class="inline h-5 w-5" />
     : emoji+' '
-} {mention_date}
+} {getFormattedDate(mention_date)}

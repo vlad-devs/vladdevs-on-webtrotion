@@ -22,8 +22,8 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 	month: "long",
 };
 ---
-
-{
+ <!-- //NOTE: Removed featued image from the top of page -->
+<!-- {
 	post.FeaturedImage && (
 		<div class="aspect-h-9 aspect-w-16 mb-6">
 			<Image
@@ -37,7 +37,7 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 			/>
 		</div>
 	)
-}
+} -->
 <h1 class="title mb-3 sm:mb-1" transition:name={post.Title}>{post.Title}</h1>
 <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
 	<p class="font-semibold">
@@ -54,12 +54,11 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 		)
 	} -->
 
-	<!-- //FIXME: fix this to actually show last edited date and not the same date again -->
 	{
 		post.Date && (
 			<span class="rounded-lg bg-quote/10 p-1 text-quote">
 				Last Updated:
-				<FormattedDate class="ms-1" date={new Date(post.Date)} dateTimeOptions={dateTimeOptions} />
+				<FormattedDate class="ms-1" date={new Date(post.LastUpdatedDate)} dateTimeOptions={dateTimeOptions} />
 			</span>
 		)
 	}
