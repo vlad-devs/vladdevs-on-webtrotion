@@ -10,8 +10,8 @@ const { block } = Astro.props;
 //NOTE: table colors are not visible on the API as of 22 Nov
 ---
 
-<div class="relative table overflow-x-auto rounded shadow-sm pb-2">
-	<table class="w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400">
+<div class="relative overflow-x-auto pb-2">
+	<table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
 		<tbody>
 			{
 				block.Table?.Rows.map((tableRow: interfaces.TableRow, j: number) => (
@@ -21,7 +21,7 @@ const { block } = Astro.props;
 								return (
 									<th
 										scope="col"
-										class="bg-gray-50 px-6 py-3 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
+										class="bg-gray-100 px-6 py-3 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
 									>
 										{cell.RichTexts.map((richText: interfaces.RichText) => (
 											<RichText richText={richText} />

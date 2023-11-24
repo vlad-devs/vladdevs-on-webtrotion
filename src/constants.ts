@@ -14,6 +14,8 @@ export const WEBMENTION_API_KEY = import.meta.env.WEBMENTION_API_KEY || process.
 /**
  *  a collection which represent a page
  */
-export const PAGE_COLLECTION = "main";
+export const MENU_PAGES_COLLECTION = "main";
 
 export const HEADING_BLOCKS = ["heading_1", "heading_2", "heading_3"];
+
+export const PUBLISH_ON_FILTER = "nerdymomocat.github.io";

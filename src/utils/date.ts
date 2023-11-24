@@ -6,6 +6,7 @@ export function getFormattedDate(
   date: string | number | Date,
   options?: Intl.DateTimeFormatOptions
 ) {
+  //console.log("DATE: ", date);
   if (typeof options !== "undefined") {
     return new Date(date).toLocaleDateString(siteConfig.date.locale, {
       ...(siteConfig.date.options as Intl.DateTimeFormatOptions),

@@ -1,7 +1,9 @@
 import fetch from "node-fetch";
 import { BASE_PATH, REQUEST_TIMEOUT_MS } from "@/constants";
 import type { Block, Heading1, Heading2, Heading3, RichText, Column } from "./interfaces";
-import { pathJoin, slugify } from "@/utils";
+import { pathJoin } from "@/utils";
+import slugify from '@sindresorhus/slugify';
+
 
 export const filePath = (url: URL): string => {
   const [dir, filename] = url.pathname.split("/").slice(-2);

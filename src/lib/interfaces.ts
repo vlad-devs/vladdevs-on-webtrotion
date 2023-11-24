@@ -21,7 +21,19 @@ export interface Post {
   Excerpt: string;
   FeaturedImage: FileObject | null;
   Rank: number;
+  HideToC: boolean;
+  LastUpdatedDate: string;
+  TypeIsData: boolean;
+  ParentDataCollectorPage: Reference | null;
+  DataItems: Reference[] | null;
+  RelatedPages: Reference[] | null;
 }
+
+// export interface DateProp {
+//   start: string;
+//   end?: null | string;
+//   timezone?: null | string;
+// }
 
 export interface Block {
   Id: string;

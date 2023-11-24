@@ -1,12 +1,13 @@
 ---
 //FIXME: try moving all of this to content and not here
 import type { GetStaticPaths, Page } from "astro";
-import PageLayout from "@/layouts/Base.astro";
-import PostPreview from "@/components/blog/PostPreview.astro";
-import Pagination from "@/components/Paginator.astro";
+import PageLayout from "src/layouts/Base.astro";
+import PostPreview from "src/components/blog/PostPreview.astro";
+import Pagination from "src/components/Paginator.astro";
 import { getAllPosts, getUniqueTags } from "@/lib/notion/client";
 import type { Post, SelectProperty } from "@/lib/interfaces";
-import { getCollections, slugify } from "@/utils";
+import { getCollections} from "@/utils";
+import slugify from '@sindresorhus/slugify';
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const posts = await getAllPosts();
@@ -34,7 +35,7 @@ const { page, collection, uniqueTags } = Astro.props as Props;
 
 const meta = {
 	title: `${collection}`,
-	description: "Ready my collection of posts.",
+	description: "Read my collection of posts.",
 };
 
 const paginationProps = {

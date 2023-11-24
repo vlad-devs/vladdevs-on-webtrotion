@@ -1,5 +1,5 @@
 import fs from "node:fs";
-
+import slugify from '@sindresorhus/slugify';
 import axios from "axios";
 import type { AxiosResponse } from "axios";
 import sharp from "sharp";
@@ -55,7 +55,7 @@ import type {
 } from "../interfaces";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { Client, APIResponseError } from "@notionhq/client";
-import { ONLY_PAGES, ONLY_POSTS } from "../filters";
+import { ONLY_PAGES, ONLY_POSTS, FOR_THIS_SITE, filterBySlug, filterByTag, filterByPageID } from "../filters";
 
 const client = new Client({
   auth: NOTION_API_SECRET,
@@ -69,7 +69,7 @@ const numberOfRetry = 2;
 type QueryFilters = requestParams.CompoundFilterObject;
 
 export async function getAllPosts(
-  queryFilters: QueryFilters = { and: [ONLY_POSTS] },
+  queryFilters: QueryFilters = { and: [ONLY_POSTS, FOR_THIS_SITE] },
 ): Promise<Post[]> {
   // if (postsCache !== null) {
   // 	return Promise.resolve(postsCache);
@@ -86,9 +86,11 @@ export async function getAllPosts(
           },
         },
         {
-          property: "Date",
-          date: {
-            on_or_before: new Date().toISOString(),
+          property: "Publish Date",
+          formula: {
+            date: {
+              on_or_before: new Date().toISOString(),
+            },
           },
         },
 
@@ -98,7 +100,7 @@ export async function getAllPosts(
     },
     sorts: [
       {
-        property: "Date",
+        timestamp: "created_time",
         direction: "descending",
       },
     ],
@@ -140,11 +142,14 @@ export async function getAllPosts(
   postsCache = results
     .filter((pageObject) => _validPageObject(pageObject))
     .map((pageObject) => _buildPost(pageObject));
+
+  postsCache = postsCache.sort((a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime());
+  //console.log("posts Cache", postsCache);
   return postsCache;
 }
 
 export async function getPages() {
-  const pages = await getAllPosts({ and: [ONLY_PAGES] });
+  const pages = await getAllPosts({ and: [ONLY_PAGES, FOR_THIS_SITE] });
 
   return pages;
 }
@@ -154,7 +159,7 @@ export async function getPosts(pageSize = 10): Promise<Post[]> {
 }
 
 export async function getRankedPosts(pageSize = 10): Promise<Post[]> {
-  const allPosts = await getAllPosts({ and: [ONLY_POSTS] });
+  const allPosts = await getAllPosts({ and: [ONLY_POSTS, FOR_THIS_SITE] });
   return allPosts
     .filter((post) => !!post.Rank)
     .sort((a, b) => {
@@ -169,24 +174,24 @@ export async function getRankedPosts(pageSize = 10): Promise<Post[]> {
 }
 
 export async function getPageBySlug(slug: string): Promise<Post | null> {
-  const allPosts = await getAllPosts({ and: [ONLY_PAGES] });
+  const allPosts = await getAllPosts({ and: [ONLY_PAGES, FOR_THIS_SITE, filterBySlug(slug)] });
   return allPosts.find((post) => post.Slug === slug) || null;
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const allPosts = await getAllPosts();
+  const allPosts = await getAllPosts({ and: [FOR_THIS_SITE, filterBySlug(slug)] });
   return allPosts.find((post) => post.Slug === slug) || null;
 }
 
 export async function getPostByPageId(pageId: string): Promise<Post | null> {
-  const allPosts = await getAllPosts();
+  const allPosts = await getAllPosts({ and: [FOR_THIS_SITE, filterByPageID(pageId)] });
   return allPosts.find((post) => post.PageId === pageId) || null;
 }
 
 export async function getPostsByTag(tagName: string, pageSize = 10): Promise<Post[]> {
   if (!tagName) return [];
 
-  const allPosts = await getAllPosts();
+  const allPosts = await getAllPosts({ and: [ONLY_POSTS, FOR_THIS_SITE, filterByTag(tagName)] });
   return allPosts
     .filter((post) => post.Tags.find((tag) => tag.name === tagName))
     .slice(0, pageSize);
@@ -926,10 +931,11 @@ function _validPageObject(pageObject: responses.PageObject): boolean {
   const prop = pageObject.properties;
   return (
     !!prop.Page.title &&
-    prop.Page.title.length > 0 &&
-    !!prop.Slug.rich_text &&
-    prop.Slug.rich_text.length > 0 &&
-    !!prop.Date.date
+    prop.Page.title.length > 0
+    // &&
+    // !!prop.Slug.rich_text &&
+    // prop.Slug.rich_text.length > 0 &&
+    // !!prop.Date.date
   );
 }
 
@@ -977,21 +983,32 @@ function _buildPost(pageObject: responses.PageObject): Post {
 
   const post: Post = {
     PageId: pageObject.id,
-    Title: prop.Page.title ? prop.Page.title.map((richText) => richText.plain_text).join("") : "",
+    Title: prop.Page?.title ? prop.Page.title.map((richText) => richText.plain_text).join("") : "",
     Icon: icon,
     Cover: cover,
-    Collection: prop.Collection.select!.name,
-    Slug: prop.Slug.rich_text
-      ? prop.Slug.rich_text.map((richText) => richText.plain_text).join("")
-      : "",
-    Date: prop.Date.date ? prop.Date.date.start : "",
-    Tags: prop.Tags.multi_select ? prop.Tags.multi_select : [],
+    Collection: prop.Collection?.select!.name,
+    // Slug: prop.Slug?.rich_text && prop.Slug.rich_text.map((richText) => richText.plain_text).join("") != ""
+    //   ? prop.Slug.rich_text.map((richText) => richText.plain_text).join("")
+    //   : prop.Page?.title ? slugify(prop.Page.title.map((richText) => richText.plain_text).join(""), { preserveLeadingUnderscore: true }) : null,
+    Slug: prop.Slug?.formula?.string ? prop.Slug.formula.string : "",
+    Date: prop['Publish Date']?.formula?.date ? prop['Publish Date']?.formula?.date.start : "",
+    Tags: prop.Tags?.multi_select ? prop.Tags.multi_select : [],
     Excerpt:
-      prop.Excerpt.rich_text && prop.Excerpt.rich_text.length > 0
+      prop.Excerpt?.rich_text && prop.Excerpt.rich_text.length > 0
         ? prop.Excerpt.rich_text.map((richText) => richText.plain_text).join("")
         : "",
     FeaturedImage: featuredImage,
     Rank: prop.Rank.number ? prop.Rank.number : 0,
+    HideToC: prop["Hide ToC"] ? prop["Hide ToC"].checkbox : false,
+    LastUpdatedDate: prop['Last Updated Date']?.formula?.date ? prop['Last Updated Date']?.formula.date.start : "",
+    TypeIsData: prop["Type Is Data?"] ? prop["Type Is Data?"].checkbox : false,
+    ParentDataCollectorPage: prop["Parent Data Collector Page"]?.relation && prop["Parent Data Collector Page"].relation.length > 0 && prop["Parent Data Collector Page"].relation[0] ? { PageId: prop["Parent Data Collector Page"].relation[0].id, Type: "page" } : null,
+    DataItems: prop["Data Items"]?.relation && prop["Data Items"].relation.length > 0
+      ? prop["Data Items"].relation.map(item => ({ PageId: item.id, Type: "page" }))
+      : null,
+    RelatedPages: prop["Related Pages"]?.relation && prop["Related Pages"].relation.length > 0
+      ? prop["Related Pages"].relation.map(item => ({ PageId: item.id, Type: "page" }))
+      : null,
   };
 
   return post;

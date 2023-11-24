@@ -2,14 +2,15 @@
 import { getDatabase, getPages } from "@/lib/notion/client";
 import { siteConfig } from "@/site.config";
 import type { Block, BlockTypes } from "@/lib/interfaces";
-import { PAGE_COLLECTION } from "@/constants";
-import { slugify } from ".";
+import { MENU_PAGES_COLLECTION } from "@/constants";
+import slugify from '@sindresorhus/slugify';
+
 
 export { getFormattedDate } from "./date";
 export { elementHasClass, toggleClass, rootHasDarkClass } from "./domElement";
 // export { getAllPosts, sortMDByDate, getUniqueTags, getUniqueTagsWithCount } from "./post";
 // export { generateToc } from "./generateToc";
-export { generateToc, buildHeadings, slugify } from "./generateToc";
+export { generateToc, buildHeadings } from "./generateToc";
 export type { TocItem } from "./generateToc";
 export { getWebmentionsForUrl } from "./webmentions";
 
@@ -32,13 +33,14 @@ export async function getCollections() {
   const { propertiesRaw } = await getDatabase();
 
   return propertiesRaw.Collection.select!.options.map(({ name }) => name).filter(
-    (name) => name !== PAGE_COLLECTION,
+    (name) => name !== MENU_PAGES_COLLECTION,
   );
 }
 
 
 export async function getMenu(): Promise<{ title: string; path: string }[]> {
   const pages = await getPages();
+  // console.log(pages);
   const collections = await getCollections();
 
   const collectionLinks = collections.map((name) => ({
@@ -53,6 +55,9 @@ export async function getMenu(): Promise<{ title: string; path: string }[]> {
       title: page.Title,
       path: page.Slug === siteConfig.homePageSlug ? "/" : `/${page.Slug}`,
     }));
+
+  //console.log(pageLinks);
+
 
   return [...pageLinks, ...collectionLinks];
 }

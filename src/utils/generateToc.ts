@@ -3,6 +3,7 @@ import type { MarkdownHeading } from "astro";
 import { HEADING_BLOCKS } from "@/constants";
 import type { Block } from "@/lib/interfaces";
 import type { Heading } from "@/types";
+import slugify from '@sindresorhus/slugify';
 
 export interface TocItem extends MarkdownHeading {
   subheadings: Array<TocItem>;
@@ -72,15 +73,5 @@ function cleanHeading(heading: Block): Heading {
 
 export function buildHeadings(blocks: Block[]) {
   return blocks.filter((block) => HEADING_BLOCKS.includes(block.Type)).map(cleanHeading);
-}
-
-export function slugify(str: string) {
-  return String(str)
-    .normalize("NFKD")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9 -]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
 }
 
