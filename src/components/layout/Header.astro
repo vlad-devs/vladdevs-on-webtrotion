@@ -33,6 +33,27 @@ const url = new URL(Astro.request.url);
 	}
 
 	customElements.define("mobile-button", MobileNavBtn);
+
+	document.addEventListener("DOMContentLoaded", function () {
+		var toggleButton = document.getElementById("toggle-navigation-menu");
+
+		document.addEventListener("click", function (event) {
+			var navMenu = document.getElementById("navigation-menu");
+			var mainHeader = document.getElementById("main-header");
+
+			// Check if the click is on the toggle button or a descendant of it
+			var isClickInsideToggleButton = toggleButton.contains(event.target);
+
+			if (!isClickInsideToggleButton && event.target instanceof Node) {
+				var isClickInsideNav = navMenu.contains(event.target);
+
+				if (!isClickInsideNav && mainHeader) {
+					// If the click is outside the navMenu and mainHeader exists, remove 'menu-open' attribute
+					mainHeader.classList.remove("menu-open");
+				}
+			}
+		});
+	});
 </script>
 
 <header
