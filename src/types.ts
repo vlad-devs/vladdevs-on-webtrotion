@@ -1,5 +1,3 @@
-// FIXME: do we need locale?
-
 export type SiteConfig = {
   author: string;
   title: string;
@@ -16,6 +14,25 @@ export type SiteConfig = {
     link: string;
     pingback?: string;
   };
+};
+
+export type SiteInfo = {
+  author: string;
+  title: string;
+  description: string;
+  lang: string;
+  ogLocale: string;
+  date: {
+    locale: string | string[] | undefined;
+    options: Intl.DateTimeFormatOptions;
+  };
+  includeViewTransitions: boolean;
+  homePageSlug: string;
+  webmentions?: {
+    link: string;
+    pingback?: string;
+  };
+  favicon?: string;
 };
 
 export type PaginationLink = {

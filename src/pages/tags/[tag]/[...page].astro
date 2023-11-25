@@ -8,32 +8,31 @@ import Pagination from "@/components/Paginator";
 import { getAllPosts } from "@/lib/notion/client";
 import type { Post } from "@/lib/notion/interfaces";
 
+import { HIDE_UNDERSCORE_SLUGS_IN_LISTS } from "@/constants";
+
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
 	const allPosts = await getAllPosts();
-	// const allPostsByDate = sortMDByDate(allPosts);
-	// const uniqueTags = getUniqueTags(allPostsByDate);
 
-	// return uniqueTags.flatMap((tag) => {
-	// 	const filterPosts = allPostsByDate.filter((post) => post.data.tags.includes(tag));
-	// 	return paginate(filterPosts, {
-	// 		params: { tag },
-	// 		pageSize: 10,
-	// 	});
-	// });
-	const allPostsByDate = allPosts.sort(
+	// Apply the underscore slug filter if HIDE_UNDERSCORE_SLUGS_IN_LISTS is true
+	const filteredPosts = HIDE_UNDERSCORE_SLUGS_IN_LISTS
+		? allPosts.filter((post) => !post.Slug.startsWith("_"))
+		: allPosts;
+
+	const allPostsByDate = filteredPosts.sort(
 		(a, b) => new Date(a.Date).getTime() - new Date(b.Date).getTime(),
 	);
-	const uniqueTags = [...new Set(allPosts.flatMap((post) => post.Tags))];
+
+	const uniqueTags = [...new Set(allPostsByDate.flatMap((post) => post.Tags))];
 
 	return uniqueTags.flatMap((tag) => {
 		const filterPosts = allPostsByDate.filter((post) => post.Tags.includes(tag));
 		return paginate(filterPosts, {
 			params: { tag: tag.name },
-
 			pageSize: 10,
 		});
 	});
 };
+
 //FIXME: use collections later
 // interface Props {
 // 	page: Page<CollectionEntry<"post">>;

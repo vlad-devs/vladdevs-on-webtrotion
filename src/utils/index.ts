@@ -1,9 +1,12 @@
 //NOTE ADDED
 import { getDatabase, getPages } from "@/lib/notion/client";
-import { siteConfig } from "@/site.config";
+// import { siteConfig } from "@/site-config";
 import type { Block, BlockTypes } from "@/lib/interfaces";
 import { MENU_PAGES_COLLECTION } from "@/constants";
 import slugify from '@sindresorhus/slugify';
+// import { siteInfo } from "./site.config";
+import { siteInfo } from "@/siteInfo";
+
 
 
 export { getFormattedDate, getFormattedDateWithTime } from "./date";
@@ -13,6 +16,7 @@ export { elementHasClass, toggleClass, rootHasDarkClass } from "./domElement";
 export { generateToc, buildHeadings } from "./generateToc";
 export type { TocItem } from "./generateToc";
 export { getWebmentionsForUrl } from "./webmentions";
+// export { siteInfo } from "./site.config";
 
 //utils.ts from otoyo's personal blog in lib has just one export of pathjoin that i moved here
 
@@ -49,11 +53,16 @@ export async function getMenu(): Promise<{ title: string; path: string }[]> {
   }));
 
   const pageLinks = pages
-    .filter((page) => page.Rank) // Removes page with No Rank or Rank 0
+    .map((page) => ({
+      ...page,
+      // Assign rank -1 to homePageSlug and 99 to pages with no rank
+      Rank: page.Slug === siteInfo.homePageSlug ? -1 :
+        (page.Rank === undefined || page.Rank === null ? 99 : page.Rank),
+    }))
     .sort((a, b) => a.Rank - b.Rank)
     .map((page) => ({
       title: page.Title,
-      path: page.Slug === siteConfig.homePageSlug ? "/" : `/${page.Slug}`,
+      path: page.Slug === siteInfo.homePageSlug ? "/" : `/${page.Slug}`,
     }));
 
   //console.log(pageLinks);

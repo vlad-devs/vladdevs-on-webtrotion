@@ -1,5 +1,3 @@
-import { Icon } from 'astro-icon';
-
 // eslint-disable-next-line prettier/prettier
 export const convertToTailwindColor = (s: string) => {
   // Convert snake_case to kebab-case

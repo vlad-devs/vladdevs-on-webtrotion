@@ -3,7 +3,7 @@ import type { APIContext, GetStaticPaths } from "astro";
 import satori, { type SatoriOptions } from "satori";
 import { html } from "satori-html";
 import { Resvg } from "@resvg/resvg-js";
-import { siteConfig } from "@/site.config";
+// import { siteConfig } from "@/site-config";
 // import { getAllPosts, getFormattedDate } from "@/utils";
 import { getFormattedDate } from "@/utils";
 
@@ -11,6 +11,10 @@ import RobotoMono from "@/assets/roboto-mono-regular.ttf";
 import RobotoMonoBold from "@/assets/roboto-mono-700.ttf";
 //ADDITION
 import { getAllPosts, getPostBySlug } from "@/lib/notion/client";
+
+// import { siteInfo } from "@/utils";
+import { siteInfo } from "@/siteInfo";
+
 
 const ogOptions: SatoriOptions = {
   width: 1200,
@@ -55,9 +59,9 @@ const markup = (title: string, pubDate: string) =>
 					></path>
 					<path d="M45.334 240 0 213.334v120L45.334 360V240Z" fill="#B04304"></path>
 				</svg>
-				<p tw="ml-3 font-semibold">${siteConfig.title}</p>
+				<p tw="ml-3 font-semibold">${siteInfo.title}</p>
 			</div>
-			<p>by ${siteConfig.author}</p>
+			<p>by ${siteInfo.author}</p>
 		</div>
 	</div>`;
 
@@ -65,7 +69,7 @@ export async function GET({ params: { slug } }: APIContext) {
   // const post = await getEntryBySlug("post", slug!);
   const post = await getPostBySlug(slug!);
   // const title = post?.data.title ?? siteConfig.title;
-  const title = post?.Title ?? siteConfig.title;
+  const title = post?.Title ?? siteInfo.title;
   // const postDate = getFormattedDate(
   //   post?.data.updatedDate ?? post?.data.publishDate ?? Date.now(),
   //   {

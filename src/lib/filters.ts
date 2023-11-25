@@ -1,4 +1,4 @@
-import { MENU_PAGES_COLLECTION, PUBLISH_ON_FILTER } from "@/constants";
+import { MENU_PAGES_COLLECTION, PUBLISH_ON_FILTER } from "../constants";
 import type { PropertyFilterObject, CompoundFilterObject } from "./notion/request-params";
 
 export const ONLY_POSTS: PropertyFilterObject = {

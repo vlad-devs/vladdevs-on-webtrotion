@@ -1,5 +1,5 @@
 ---
-import PageLayout from "../layouts/Base.astro"
+import PageLayout from "../layouts/Base.astro";
 import PostPreview from "../components/blog/PostPreview.astro";
 import {
 	downloadFile,
@@ -12,13 +12,15 @@ import { extractTargetBlocks } from "../lib/blog-helpers";
 import NotionBlocks from "../components/NotionBlocks.astro";
 import type { Post } from "../lib/interfaces";
 
-import { siteConfig } from "@/site.config";
+// import { siteConfig } from "@/site-config";
+// import { siteInfo } from "@/utils";
+import { siteInfo } from "@/siteInfo";
 
 export async function getStaticPaths() {
 	const pages = await getPages();
 
 	return pages.map((page) => ({
-		params: { page: page.Slug === siteConfig.homePageSlug ? undefined : `/${page.Slug}` },
+		params: { page: page.Slug === siteInfo.homePageSlug ? undefined : `/${page.Slug}` },
 		props: { page },
 	}));
 }
@@ -75,7 +77,8 @@ await Promise.all(
 		.map((promise) => promise.then(downloadFile)),
 );
 ---
-<PageLayout meta={{ title: page.Title || siteConfig.title }}>
+
+<PageLayout meta={{ title: page.Title || siteInfo.title }}>
 	<section>
 		<NotionBlocks blocks={blocks} isRoot={true} />
 	</section>

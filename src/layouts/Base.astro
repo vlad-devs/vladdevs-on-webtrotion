@@ -7,27 +7,31 @@ import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import SkipLink from "@/components/SkipLink";
-import { siteConfig } from "@/site.config";
+// import { siteConfig } from "@/site-config";
+// import { siteInfo } from "@/utils";
+import { siteInfo } from "@/siteInfo";
 
 interface Props {
 	meta: SiteMeta;
 }
 
 const {
-	meta: { title, description = siteConfig.description, ogImage, articleDate },
+	meta: { title = siteInfo.title, description = siteInfo.description, ogImage, articleDate },
 } = Astro.props;
+
+// console.log(siteInfo);
 ---
 
-<html lang={siteConfig.lang}>
+<html lang={siteInfo.lang}>
 	<head>
 		<BaseHead title={title} description={description} ogImage={ogImage} articleDate={articleDate} />
 		{
 			/*
 			Fallback set to none in non-supporting browsers -> https://docs.astro.build/en/guides/view-transitions/#fallback-control
-			This is set to false by default in src/site.config.ts
+			This is set to false by default in src/utils/siteConfig.ts
 			*/
 		}
-		{siteConfig.includeViewTransitions && <ViewTransitions fallback="none" />}
+		{siteInfo.includeViewTransitions && <ViewTransitions fallback="none" />}
 	</head>
 	<body>
 		<!-- <ThemeProvider /> -->

@@ -1,6 +1,15 @@
-import { siteConfig } from "@/site.config";
+const dateOptions = {
+  date: {
+    locale: "en",
+    options: {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    },
+  },
+}
 
-const dateFormat = new Intl.DateTimeFormat(siteConfig.date.locale, siteConfig.date.options);
+const dateFormat = new Intl.DateTimeFormat(dateOptions.date.locale, dateOptions.date.options);
 
 export function getFormattedDate(
   date: string | number | Date,
@@ -8,8 +17,8 @@ export function getFormattedDate(
 ) {
   //console.log("DATE: ", date);
   if (typeof options !== "undefined") {
-    return new Date(date).toLocaleDateString(siteConfig.date.locale, {
-      ...(siteConfig.date.options as Intl.DateTimeFormatOptions),
+    return new Date(date).toLocaleDateString(dateOptions.date.locale, {
+      ...(dateOptions.date.options as Intl.DateTimeFormatOptions),
       ...options,
     });
   }
@@ -31,7 +40,7 @@ export function getFormattedDateWithTime(date: string | number | Date) {
 
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
     ...(showTime && { hour: '2-digit', minute: '2-digit', hour12: true })
   };

@@ -7,10 +7,10 @@ import PostPreviewFull from "src/components/blog/PostPreviewFull.astro";
 import Pagination from "src/components/Paginator.astro";
 import { getAllPosts, getUniqueTags } from "@/lib/notion/client";
 import type { Post, SelectProperty } from "@/lib/interfaces";
-import { getCollections} from "@/utils";
-import slugify from '@sindresorhus/slugify';
+import { getCollections } from "@/utils";
+import slugify from "@sindresorhus/slugify";
 import { convertToTailwindColor, convertToTailwindColorForBorder } from "@/lib/style-helpers";
-import { FULL_PREVIEW_COLLECTIONS } from "@/constants";
+import { FULL_PREVIEW_COLLECTIONS, HIDE_UNDERSCORE_SLUGS_IN_LISTS } from "@/constants";
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const posts = await getAllPosts();
@@ -18,8 +18,16 @@ export const getStaticPaths = (async ({ paginate }) => {
 	const collections = await getCollections();
 
 	return collections.flatMap((collection) => {
-		const collectionPosts = posts.filter((post) => post.Collection === collection);
+		// Initially filter posts based on the collection
+		let collectionPosts = posts.filter((post) => post.Collection === collection);
+
+		// Further filter posts if HIDE_UNDERSCORE_SLUGS_IN_LISTS is true
+		if (HIDE_UNDERSCORE_SLUGS_IN_LISTS) {
+			collectionPosts = collectionPosts.filter((post) => !post.Slug.startsWith("_"));
+		}
+
 		const uniqueTags = getUniqueTags(collectionPosts);
+
 		return paginate(collectionPosts, {
 			params: { collection: slugify(collection) },
 			props: { collection, uniqueTags },
@@ -63,14 +71,17 @@ const paginationProps = {
 		<section aria-label="Blog post list">
 			<ul class="space-y-8 text-start">
 				{
-					page.data.map((post) => (
-            FULL_PREVIEW_COLLECTIONS.includes(collection)?
-						(<li class="flex flex-col flex-wrap gap-2 sm:flex-row [&_q]:basis-full">
-							<PostPreviewFull post_full_preview={post} as="h2" withDesc />
-						</li>):(<li class="flex flex-col flex-wrap gap-2 sm:flex-row [&_q]:basis-full">
-							<PostPreview post={post} as="h2" withDesc />
-						</li>)
-					))
+					page.data.map((post) =>
+						FULL_PREVIEW_COLLECTIONS.includes(collection) ? (
+							<li class="flex flex-col flex-wrap gap-2 sm:flex-row [&_q]:basis-full">
+								<PostPreviewFull post_full_preview={post} as="h2" withDesc />
+							</li>
+						) : (
+							<li class="flex flex-col flex-wrap gap-2 sm:flex-row [&_q]:basis-full">
+								<PostPreview post={post} as="h2" withDesc />
+							</li>
+						),
+					)
 				}
 			</ul>
 			<Pagination {...paginationProps} />
@@ -101,7 +112,9 @@ const paginationProps = {
 						{uniqueTags.map((tag) => (
 							<li>
 								<a
-                class={`flex items-center justify-center rounded-lg p-1 border ${convertToTailwindColor(tag.color+"-background")} ${convertToTailwindColorForBorder(tag.color+"-background")}`}
+									class={`flex items-center justify-center rounded-lg border p-1 ${convertToTailwindColor(
+										tag.color + "-background",
+									)} ${convertToTailwindColorForBorder(tag.color + "-background")}`}
 									href={`/tags/${tag.name}/`}
 									aria-label={`View all posts with the tag: ${tag.name}`}
 								>

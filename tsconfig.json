@@ -28,13 +28,13 @@
       "@/types": [
         "src/types.ts"
       ],
-      "@/site.config": [
-        "src/site.config.ts"
-      ],
       "@/lib/notion/*": [
         "src/lib/notion/*"
-      ]
-    }
+      ],
+      "@/siteInfo": [
+        "src/site.config.ts"
+      ],
+    },
   },
   "include": [
     "src",

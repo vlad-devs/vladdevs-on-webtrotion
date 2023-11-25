@@ -2,20 +2,16 @@ import { defineConfig } from "astro/config";
 import fs from "fs";
 //NOT USING MDX
 // import mdx from "@astrojs/mdx";
+// import remarkUnwrapImages from "remark-unwrap-images";
+// import { remarkReadingTime } from "./src/utils/remark-reading-time";
 import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
 import prefetch from "@astrojs/prefetch";
-import remarkUnwrapImages from "remark-unwrap-images";
-import { remarkReadingTime } from "./src/utils/remark-reading-time";
 import { astroImageTools } from "astro-imagetools";
-
 import satori from "astro-satori";
 
-import { CUSTOM_DOMAIN, BASE_PATH } from "./src/constants";
-// import CoverImageDownloader from './src/integrations/cover-image-downloader';
-// import CustomIconDownloader from './src/integrations/custom-icon-downloader';
-// import FeaturedImageDownloader from './src/integrations/featured-image-downloader';
-// import PublicNotionCopier from './src/integrations/public-notion-copier';
+
+import { CUSTOM_DOMAIN, BASE_PATH, HIDE_UNDERSCORE_SLUGS_IN_LISTS } from "./src/constants";
 
 const getSite = function () {
   if (CUSTOM_DOMAIN) {
@@ -42,6 +38,21 @@ const getSite = function () {
 
   return new URL(BASE_PATH, 'http://localhost:4321').toString();
 };
+import CoverImageDownloader from './src/integrations/cover-image-downloader';
+import CustomIconDownloader from './src/integrations/custom-icon-downloader';
+import FeaturedImageDownloader from './src/integrations/featured-image-downloader';
+import PublicNotionCopier from './src/integrations/public-notion-copier';
+
+const siteMapConfig = HIDE_UNDERSCORE_SLUGS_IN_LISTS ? {
+  filter: (page) => {
+    console.log(page);
+    if (page.split("/")[-1].startsWith("_")) {
+      console.log('Excluding page from sitemap:', page);
+      return false;
+    }
+    return true;
+  },
+} : {};
 
 // https://astro.build/config
 export default defineConfig({
@@ -50,27 +61,24 @@ export default defineConfig({
   // site: "https://astro-cactus.chriswilliams.dev/",
   site: getSite(),
   base: BASE_PATH,
-  markdown: {
-    remarkPlugins: [remarkUnwrapImages, remarkReadingTime],
-    remarkRehype: {
-      footnoteLabelProperties: {
-        className: [""]
-      }
-    },
-    shikiConfig: {
-      theme: "dracula",
-      wrap: true
-    }
-  },
   integrations: [
     // mdx({}),
     tailwind({
       applyBaseStyles: false
-    }), sitemap(), prefetch(), astroImageTools, satori(),
-    // CoverImageDownloader(),
-    // CustomIconDownloader(),
-    // FeaturedImageDownloader(),
-    // PublicNotionCopier()
+    }), sitemap(HIDE_UNDERSCORE_SLUGS_IN_LISTS ? {
+      filter: (page) => {
+        console.log(page);
+        if (page.split("/")[-1].startsWith("_")) {
+          console.log('Excluding page from sitemap:', page);
+          return false;
+        }
+        return true;
+      },
+    } : {}), prefetch(), astroImageTools, satori(),
+    CoverImageDownloader(),
+    CustomIconDownloader(),
+    FeaturedImageDownloader(),
+    PublicNotionCopier()
   ],
   image: {
     domains: ["webmention.io"]

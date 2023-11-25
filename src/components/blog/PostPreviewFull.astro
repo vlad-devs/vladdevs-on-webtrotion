@@ -80,7 +80,7 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
   </Tag>
 	</a>
 
-{withDesc && <q class="line-clamp-3 block italic">{post_full_preview.Excerpt}</q>}
+{withDesc && post_full_preview.Excerpt && <q class="line-clamp-3 block italic">{post_full_preview.Excerpt}</q>}
 {
 	post_full_preview.Tags.length > 0 && (
 		<div class="mt-1">

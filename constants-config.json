@@ -1,0 +1,21 @@
+{
+  "DATABASE_ID": "169b6e632b7448529120599281265ac5",
+  "CUSTOM_DOMAIN": "",
+  "BASE_PATH": "",
+  "PUBLIC_GA_TRACKING_ID": "",
+  "NUMBER_OF_POSTS_PER_PAGE": 10,
+  "ENABLE_LIGHTBOX": true,
+  "REQUEST_TIMEOUT_MS": "1000",
+  "WEBMENTION_API_KEY": "",
+  "MENU_PAGES_COLLECTION": "main",
+  "HEADING_BLOCKS": [
+    "heading_1",
+    "heading_2",
+    "heading_3"
+  ],
+  "PUBLISH_ON_FILTER": "nerdymomocat.github.io",
+  "FULL_PREVIEW_COLLECTIONS": [
+    "Stream"
+  ],
+  "HIDE_UNDERSCORE_SLUGS_IN_LISTS": true
+}

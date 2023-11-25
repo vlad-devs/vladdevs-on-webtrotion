@@ -9,7 +9,8 @@ import {
   DATABASE_ID,
   NUMBER_OF_POSTS_PER_PAGE,
   REQUEST_TIMEOUT_MS,
-} from "@/constants";
+  MENU_PAGES_COLLECTION
+} from "../../constants";
 import type * as responses from "./responses";
 import type * as requestParams from "./request-params";
 import type {
@@ -55,7 +56,7 @@ import type {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { Client, APIResponseError } from "@notionhq/client";
 import { ONLY_PAGES, ONLY_POSTS, FOR_THIS_SITE, filterBySlug, filterByTag, filterByPageID } from "../filters";
-import { getFormattedDateWithTime } from "@/utils";
+import { getFormattedDateWithTime } from "../../utils/date";
 
 
 const client = new Client({
@@ -1026,7 +1027,8 @@ function _buildPost(pageObject: responses.PageObject): Post {
     Title: prop.Page?.title ? prop.Page.title.map((richText) => richText.plain_text).join("") : "",
     Icon: icon,
     Cover: cover,
-    Collection: prop.Collection?.select!.name,
+    // Collection: prop.Collection?.select!.name,
+    Collection: prop.Collection?.select ? prop.Collection.select.name : "",
     // Slug: prop.Slug?.rich_text && prop.Slug.rich_text.map((richText) => richText.plain_text).join("") != ""
     //   ? prop.Slug.rich_text.map((richText) => richText.plain_text).join("")
     //   : prop.Page?.title ? slugify(prop.Page.title.map((richText) => richText.plain_text).join(""), { preserveLeadingUnderscore: true }) : null,
