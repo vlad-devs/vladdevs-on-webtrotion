@@ -32,9 +32,16 @@ const code = block.Code.RichTexts.map(
 ).join("");
 const language = block.Code.Language.toLowerCase();
 const grammar = Prism.languages[language.toLowerCase()] || Prism.languages.javascript;
+const code_inject = code.startsWith("<!DOCTYPE html>");
 ---
-
-<div class="code w-full mb-1 font-mono relative">
+{
+  code_inject ?
+  (
+    <div class="injected-html-code" set:html={code.replace("<!DOCTYPE html>","")}/>
+  )
+  :
+  (
+  <div class="code w-full mb-1 font-mono relative">
 	<div>
           <div class="flex">
             <button class="copy border-0 p-2 cursor-pointer absolute top-0 right-0" data-code={"```"+language+"\n"+code+"```"} >
@@ -56,11 +63,6 @@ const grammar = Prism.languages[language.toLowerCase()] || Prism.languages.javas
 </div>
 
 <script>
-	import mermaid from "mermaid";
-	mermaid.initialize({ startOnLoad: true, theme: "neutral" });
-</script>
-
-<script>
   document.querySelectorAll("button.copy").forEach((button) => {
   button.addEventListener("click", (ev) => {
     const svg = button.querySelector('.svg-icon path');
@@ -74,4 +76,10 @@ const grammar = Prism.languages[language.toLowerCase()] || Prism.languages.javas
     }
   });
 });
+</script>
+  )
+}
+<script>
+  import mermaid from 'mermaid'
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral' })
 </script>

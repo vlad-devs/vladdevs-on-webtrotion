@@ -75,7 +75,6 @@ await Promise.all(
 		.map((promise) => promise.then(downloadFile)),
 );
 ---
-
 <PageLayout meta={{ title: page.Title || siteConfig.title }}>
 	<section>
 		<NotionBlocks blocks={blocks} isRoot={true} />
