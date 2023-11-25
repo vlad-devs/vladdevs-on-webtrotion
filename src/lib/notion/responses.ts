@@ -346,6 +346,7 @@ export interface BlockObject {
   embed?: Embed;
   image?: FileBlock;
   video?: FileBlock;
+  audio?: FileBlock;
   file?: FileBlock;
   pdf?: FileBlock;
   bookmark?: Bookmark;

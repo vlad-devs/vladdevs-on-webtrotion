@@ -2,11 +2,9 @@
 import { getDatabase, getPages } from "@/lib/notion/client";
 // import { siteConfig } from "@/site-config";
 import type { Block, BlockTypes } from "@/lib/interfaces";
-import { MENU_PAGES_COLLECTION } from "@/constants";
+import { MENU_PAGES_COLLECTION, HOME_PAGE_SLUG } from "@/constants";
 import slugify from '@sindresorhus/slugify';
 // import { siteInfo } from "./site.config";
-import { siteInfo } from "@/siteInfo";
-
 
 
 export { getFormattedDate, getFormattedDateWithTime } from "./date";
@@ -56,13 +54,13 @@ export async function getMenu(): Promise<{ title: string; path: string }[]> {
     .map((page) => ({
       ...page,
       // Assign rank -1 to homePageSlug and 99 to pages with no rank
-      Rank: page.Slug === siteInfo.homePageSlug ? -1 :
+      Rank: page.Slug === HOME_PAGE_SLUG ? -1 :
         (page.Rank === undefined || page.Rank === null ? 99 : page.Rank),
     }))
     .sort((a, b) => a.Rank - b.Rank)
     .map((page) => ({
       title: page.Title,
-      path: page.Slug === siteInfo.homePageSlug ? "/" : `/${page.Slug}`,
+      path: page.Slug === HOME_PAGE_SLUG ? "/" : `/${page.Slug}`,
     }));
 
   //console.log(pageLinks);

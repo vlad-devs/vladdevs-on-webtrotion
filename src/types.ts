@@ -16,25 +16,6 @@ export type SiteConfig = {
   };
 };
 
-export type SiteInfo = {
-  author: string;
-  title: string;
-  description: string;
-  lang: string;
-  ogLocale: string;
-  date: {
-    locale: string | string[] | undefined;
-    options: Intl.DateTimeFormatOptions;
-  };
-  includeViewTransitions: boolean;
-  homePageSlug: string;
-  webmentions?: {
-    link: string;
-    pingback?: string;
-  };
-  favicon?: string;
-};
-
 export type PaginationLink = {
   url: string;
   text?: string;

@@ -47,19 +47,25 @@ const headings = buildHeadings(blocks);
 const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 	.concat(extractTargetBlocks("video", blocks))
 	.concat(extractTargetBlocks("file", blocks))
+	.concat(extractTargetBlocks("audio", blocks))
 	.filter((block) => {
 		if (!block) {
 			return false;
 		}
-		const imageOrVideoOrFile = block.NImage || block.File || block.Video;
-		return imageOrVideoOrFile && imageOrVideoOrFile.File && imageOrVideoOrFile.File.Url;
+		const imageOrVideoOrAudioOrFile = block.NImage || block.File || block.Video || block.NAudio;
+		return (
+			imageOrVideoOrAudioOrFile &&
+			imageOrVideoOrAudioOrFile.File &&
+			imageOrVideoOrAudioOrFile.File.Url
+		);
 	});
 
 // Download files
 await Promise.all(
 	fileAtacchedBlocks
 		.map(async (block) => {
-			const expiryTime = (block.NImage || block.File || block.Video).File.ExpiryTime;
+			const expiryTime = (block.NImage || block.File || block.Video || block.NAudio).File
+				.ExpiryTime;
 			if (Date.parse(expiryTime) > Date.now()) {
 				return Promise.resolve(block);
 			}
@@ -69,7 +75,7 @@ await Promise.all(
 			promise.then((block) => {
 				let url!: URL;
 				try {
-					url = new URL((block.NImage || block.File || block.Video).File.Url);
+					url = new URL((block.NImage || block.File || block.Video || block.NAudio).File.Url);
 				} catch (err) {
 					console.log("Invalid file URL");
 					return Promise.reject();

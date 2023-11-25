@@ -52,6 +52,7 @@ import type {
   LinkToPage,
   Mention,
   Reference,
+  NAudio
 } from "../interfaces";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { Client, APIResponseError } from "@notionhq/client";
@@ -662,6 +663,24 @@ function _buildBlock(blockObject: responses.BlockObject): Block {
           };
         }
         block.NImage = image;
+      }
+      break;
+    case "audio":
+      if (blockObject.audio) {
+        const audio: NAudio = {
+          Caption: blockObject.audio.caption?.map(_buildRichText) || [],
+          Type: blockObject.audio.type,
+        };
+        if (blockObject.audio.type === "external" && blockObject.audio.external) {
+          audio.External = { Url: blockObject.audio.external.url };
+        } else if (blockObject.audio.type === "file" && blockObject.audio.file) {
+          audio.File = {
+            Type: blockObject.audio.type,
+            Url: blockObject.audio.file.url,
+            ExpiryTime: blockObject.audio.file.expiry_time,
+          };
+        }
+        block.NAudio = audio;
       }
       break;
     case "file":

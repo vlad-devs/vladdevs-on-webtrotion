@@ -44,6 +44,7 @@ export interface Block {
   NumberedListItem?: NumberedListItem;
   ToDo?: ToDo;
   NImage?: NImage;
+  NAudio?: NAudio;
   File?: File;
   Code?: Code;
   Quote?: Quote;
@@ -124,6 +125,13 @@ export interface Video {
   Width?: number;
   Height?: number;
   Size?: number;
+}
+
+export interface NAudio {
+  Caption: RichText[];
+  Type: string;
+  External?: External;
+  File?: FileObject;
 }
 
 export interface File {
@@ -322,4 +330,5 @@ export type BlockTypes =
   | "template"
   | "to_do"
   | "toggle"
-  | "video";
+  | "video"
+  | "audio";

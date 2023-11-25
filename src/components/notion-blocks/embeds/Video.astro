@@ -20,15 +20,13 @@ if (block.Video.External) {
 }
 ---
 
-
-
 <div class="video">
 	{
 		videoUrl &&
 			(url ? (
 				isYouTubeURL(url) ? (
 					<iframe
-          class="w-full h-[340px] max-w-sm:h-[220px]"
+						class="max-w-sm:h-[220px] h-[340px] w-full"
 						src={`https://www.youtube.com/embed/${parseYouTubeVideoId(url)}`}
 						title="YouTube video player"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -36,7 +34,7 @@ if (block.Video.External) {
 					/>
 				) : null
 			) : (
-				<video class="w-full h-[340px] max-w-sm:h-[220px]" controls>
+				<video class="max-w-sm:h-[220px] h-[340px] w-full" controls>
 					<source src={videoUrl} type="video/mp4" />
 					Your browser does not support the video tag.
 				</video>

@@ -1,16 +1,14 @@
 import { getDatabase } from "@/lib/notion/client";
 // import { getNavLink, getSite } from "@/lib/blog-helpers";
-import type { SiteInfo } from "@/types";
+import type { SiteConfig } from "@/types";
+import { AUTHOR, WEBMENTION_LINK, HOME_PAGE_SLUG } from "./constants";
 
 
 const tl = "", ds = "", path = "/", oim = "";
 const database = await getDatabase();
 
-const rawTitle = database.Title.includes("||") ? database.Title.split(" || ")[0] : database.Title;
-const siteAuthor = database.Title.includes("||") ? database.Title.split(" || ")[1] : "";
-const siteTitle = tl ? `${tl} - ${rawTitle}` : rawTitle;
+const siteTitle = tl ? `${tl} - ${database.Title}` : database.Title;
 const siteDescription = ds ? ds : database.Description;
-const siteWebmention = "";
 // const siteURL = new URL(getNavLink(path), getSite()).toString();
 
 // console.log(siteTitle, siteDescription, siteURL);
@@ -20,12 +18,12 @@ const siteWebmention = "";
 //   return [siteTitle, siteDescription, siteURL];
 // }
 
-export const siteInfo: SiteInfo = {
+export const siteInfo: SiteConfig = {
   title: siteTitle,
   description: siteDescription,
-  author: siteAuthor,
+  author: AUTHOR,
   lang: "en",
-  homePageSlug: "index",
+  homePageSlug: HOME_PAGE_SLUG,
   // Include view-transitions: https://docs.astro.build/en/guides/view-transitions/
   includeViewTransitions: false,
   // Meta property, found in src/components/BaseHead.astro L:42
@@ -40,7 +38,7 @@ export const siteInfo: SiteInfo = {
     },
   },
   webmentions: {
-    link: "",
+    link: WEBMENTION_LINK,
     // link: "https://webmention.io/astro-cactus.chriswilliams.dev/webmention",
     // site: "https://astro-cactus.chriswilliams.dev/",
   },

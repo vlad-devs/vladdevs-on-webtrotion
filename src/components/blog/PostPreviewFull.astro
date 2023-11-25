@@ -5,16 +5,10 @@ import type { HTMLTag } from "astro/types";
 import FormattedDate from "../FormattedDate.astro";
 import type { Post } from "src/lib/interfaces";
 import { getPostBySlug } from "@/lib/notion/client";
-import {
-	downloadFile,
-	getAllBlocksByBlockId,
-	getBlock,
-} from "@/lib/notion/client";
+import { downloadFile, getAllBlocksByBlockId, getBlock } from "@/lib/notion/client";
 import { extractTargetBlocks } from "@/lib/blog-helpers";
 import NotionBlocks from "src/components/NotionBlocks.astro";
 import { convertToTailwindColor, convertToTailwindColorForBorder } from "@/lib/style-helpers";
-
-
 
 // type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
 // 	post: CollectionEntry<"post">;
@@ -31,19 +25,27 @@ interface Props {
 const { post_full_preview, as: Tag = "div", withDesc = false } = Astro.props;
 const blocks = await getAllBlocksByBlockId(post_full_preview.PageId);
 const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
+	.concat(extractTargetBlocks("video", blocks))
 	.concat(extractTargetBlocks("file", blocks))
+	.concat(extractTargetBlocks("audio", blocks))
 	.filter((block) => {
 		if (!block) {
 			return false;
 		}
-		const imageOrFile = block.NImage || block.File;
-		return imageOrFile && imageOrFile.File && imageOrFile.File.Url;
+		const imageOrVideoOrAudioOrFile = block.NImage || block.File || block.Video || block.NAudio;
+		return (
+			imageOrVideoOrAudioOrFile &&
+			imageOrVideoOrAudioOrFile.File &&
+			imageOrVideoOrAudioOrFile.File.Url
+		);
 	});
 
-  await Promise.all(
+// Download files
+await Promise.all(
 	fileAtacchedBlocks
 		.map(async (block) => {
-			const expiryTime = (block.NImage || block.File).File.ExpiryTime;
+			const expiryTime = (block.NImage || block.File || block.Video || block.NAudio).File
+				.ExpiryTime;
 			if (Date.parse(expiryTime) > Date.now()) {
 				return Promise.resolve(block);
 			}
@@ -51,13 +53,14 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 		})
 		.map((promise) =>
 			promise.then((block) => {
+				let url!: URL;
 				try {
-					let url = new URL((block.NImage || block.File).File.Url);
-					return Promise.resolve(url);
+					url = new URL((block.NImage || block.File || block.Video || block.NAudio).File.Url);
 				} catch (err) {
 					console.log("Invalid file URL");
 					return Promise.reject();
 				}
+				return Promise.resolve(url);
 			}),
 		)
 		.map((promise) => promise.then(downloadFile)),
@@ -66,21 +69,26 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 //TODO: what is this?
 // const postDate = post.data.updatedDate ?? post.data.publishDate;
 ---
+
 <FormattedDate date={new Date(post_full_preview.Date)} class="min-w-[120px] text-gray-500" />
 
-	<a
-    href={`#${post_full_preview.Slug}`}
-					id={post_full_preview.Slug}
-					onclick="var fullUrl = `${window.location.origin}${window.location.pathname}#${id}`; navigator.clipboard.writeText(fullUrl);"
-		class="inline"
-		rel="prefetch"
-	>
-  <Tag class="mt-2 mb-2 text-2xl font-normal">
+<a
+	href={`#${post_full_preview.Slug}`}
+	id={post_full_preview.Slug}
+	onclick="var fullUrl = `${window.location.origin}${window.location.pathname}#${id}`; navigator.clipboard.writeText(fullUrl);"
+	class="inline"
+	rel="prefetch"
+>
+	<Tag class="mb-2 mt-2 text-2xl font-normal">
 		{post_full_preview.Title}
-  </Tag>
-	</a>
+	</Tag>
+</a>
 
-{withDesc && post_full_preview.Excerpt && <q class="line-clamp-3 block italic">{post_full_preview.Excerpt}</q>}
+{
+	withDesc && post_full_preview.Excerpt && (
+		<q class="line-clamp-3 block italic">{post_full_preview.Excerpt}</q>
+	)
+}
 {
 	post_full_preview.Tags.length > 0 && (
 		<div class="mt-1">
@@ -104,14 +112,15 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 			{post_full_preview.Tags.map((tag, i) => (
 				<>
 					<a
-            class={`text-sm rounded-sm border inline-block ${convertToTailwindColor(tag.color+"-background")} ${convertToTailwindColorForBorder(tag.color+"-background")}`}
+						class={`inline-block rounded-sm border text-sm ${convertToTailwindColor(
+							tag.color + "-background",
+						)} ${convertToTailwindColorForBorder(tag.color + "-background")}`}
 						aria-label={`View more blogs with the tag ${tag.name}`}
 						href={`/tags/${tag.name}/`}
 						data-pagefind-filter="tag"
 					>
 						{tag.name}
-					</a>
-					{" "}
+					</a>{" "}
 				</>
 			))}
 		</div>
@@ -119,21 +128,21 @@ const fileAtacchedBlocks = extractTargetBlocks("image", blocks)
 }
 
 <section>
-  <NotionBlocks blocks={blocks} isRoot={true} />
+	<NotionBlocks blocks={blocks} isRoot={true} />
 </section>
 
 <style>
-  h2::before {
-      content: "#";
-      position: absolute;
-      color: var(--accent);
-      margin-left: -1.5rem;
-      display: inline-block;
-      opacity: 0; /* Start with invisible content */
-      transition: opacity 0.3s ease; /* Transition the opacity */
-  }
+	h2::before {
+		content: "#";
+		position: absolute;
+		color: var(--accent);
+		margin-left: -1.5rem;
+		display: inline-block;
+		opacity: 0; /* Start with invisible content */
+		transition: opacity 0.3s ease; /* Transition the opacity */
+	}
 
-  h2:hover::before {
-      opacity: 1; /* Make the content visible on hover */
-  }
-  </style>
+	h2:hover::before {
+		opacity: 1; /* Make the content visible on hover */
+	}
+</style>
