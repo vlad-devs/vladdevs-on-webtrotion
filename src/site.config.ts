@@ -9,6 +9,7 @@ const database = await getDatabase();
 
 const siteTitle = tl ? `${tl} - ${database.Title}` : database.Title;
 const siteDescription = ds ? ds : database.Description;
+const favicon = database.Icon ? (database.Icon.Type == "file" || database.Icon.Type == "external" ? database.Icon.Url : database.Icon.Emoji) : "";
 // const siteURL = new URL(getNavLink(path), getSite()).toString();
 
 // console.log(siteTitle, siteDescription, siteURL);
@@ -42,4 +43,5 @@ export const siteInfo: SiteConfig = {
     // link: "https://webmention.io/astro-cactus.chriswilliams.dev/webmention",
     // site: "https://astro-cactus.chriswilliams.dev/",
   },
+  favicon: favicon
 };

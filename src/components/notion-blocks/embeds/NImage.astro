@@ -32,7 +32,7 @@ if (block.NImage?.External) {
 						<img src={image} alt="image block" />
 					)}
 				</div>
-				<Caption richTexts={block.NImage.Caption} />
+				<Caption richTexts={block.NImage.Caption}  block={block} />
 			</div>
 		)
 	}

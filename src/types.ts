@@ -14,6 +14,7 @@ export type SiteConfig = {
     link: string;
     pingback?: string;
   };
+  favicon: string;
 };
 
 export type PaginationLink = {

@@ -8,8 +8,6 @@ import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
 import prefetch from "@astrojs/prefetch";
 import { astroImageTools } from "astro-imagetools";
-import satori from "astro-satori";
-
 
 import { CUSTOM_DOMAIN, BASE_PATH, HIDE_UNDERSCORE_SLUGS_IN_LISTS } from "./src/constants";
 
@@ -74,7 +72,7 @@ export default defineConfig({
         }
         return true;
       },
-    } : {}), prefetch(), astroImageTools, satori(),
+    } : {}), prefetch(), astroImageTools,
     CoverImageDownloader(),
     CustomIconDownloader(),
     FeaturedImageDownloader(),

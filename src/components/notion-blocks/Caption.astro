@@ -1,15 +1,21 @@
 ---
-import { RichText } from "../../lib/interfaces.ts";
+import * as interfaces from "../../lib/interfaces.ts";
+import RichTextB from "./RichText.astro";
 
 export interface Props {
-	richTexts: RichText[];
+	richTexts: interfaces.RichText[];
+	block?: interfaces.Block;
 }
 
-const { richTexts } = Astro.props;
+const { richTexts, block } = Astro.props;
 ---
 
 {
-	richTexts.length > 0 && richTexts[0].Text.Content && (
-		<div class="caption pt-1 text-sm">{richTexts[0].Text.Content}</div>
+	(
+		<div class="caption pt-1 text-sm text-gray-500">
+			{richTexts.map((richText: interfaces.RichText) => (
+				<RichTextB richText={richText} blockID={block.Id} />
+			))}
+		</div>
 	)
 }

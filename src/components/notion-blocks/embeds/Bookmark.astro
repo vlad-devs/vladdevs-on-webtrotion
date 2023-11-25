@@ -1,78 +1,90 @@
 ---
-import createMetascraper from 'metascraper'
-import metascraperDescription from 'metascraper-description'
-import metascraperImage from 'metascraper-image'
-import metascraperTitle from 'metascraper-title'
-import * as interfaces from '../../../lib/interfaces.ts'
+import createMetascraper from "metascraper";
+import metascraperDescription from "metascraper-description";
+import metascraperImage from "metascraper-image";
+import metascraperTitle from "metascraper-title";
+import * as interfaces from "../../../lib/interfaces.ts";
 import Caption from "../Caption.astro";
 
-
 export interface Props {
-  block: interfaces.Block
-  urlMap: { [key: string]: string }
+	block: interfaces.Block;
+	urlMap: { [key: string]: string };
 }
 
-const { block, urlMap } = Astro.props
+const { block, urlMap } = Astro.props;
 
-const urlString = (block.Bookmark || block.LinkPreview || block.Embed).Url
+const urlString = (block.Bookmark || block.LinkPreview || block.Embed).Url;
 const metascraper = createMetascraper([
-  metascraperDescription(),
-  metascraperImage(),
-  metascraperTitle(),
-])
+	metascraperDescription(),
+	metascraperImage(),
+	metascraperTitle(),
+]);
 
-let url: URL
-let metadata: Record<string, string>
+let url: URL;
+let metadata: Record<string, string>;
 try {
-  url = new URL(urlString)
-  const html = urlMap[urlString]
-  if (html) {
-    metadata = await metascraper({ html, url })
-  }
+	url = new URL(urlString);
+	const html = urlMap[urlString];
+	if (html) {
+		metadata = await metascraper({ html, url });
+	}
 } catch (err) {
-  console.log(err)
+	console.log(err);
 }
 ---
+
 <div class="bookmark pb-2">
-{
-  url && (
-    <div class="flex overflow-hidden w-full max-w-full text-sm">
-      <a href={url.toString()} target="_blank" rel="noopener noreferrer" class="w-fill no-underline border border-gray-200 dark:border-gray-800 rounded flex overflow-hidden select-none">
-        <div class="p-3 overflow-hidden text-left text-gray-900 dark:text-gray-100">
-          <div class="text-base leading-5 whitespace-nowrap overflow-hidden trncate h-6 mb-0.5">{metadata && metadata.title}</div>
-          <div class="text-xs leading-4 opacity-80 h-8 overflow-hidden">{metadata && metadata.description}</div>
-          <div class="flex mt-1.5">
-            <div class="w-4 h-4 min-w-4 mr-1.5">
-              <img class="max-w-full inline-block"
-                src={`https://www.google.com/s2/favicons?domain=${url.hostname}`}
-                alt="title"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <div class="text-xs leading-4 whitespace-nowrap overflow-hidden truncate">{url.origin}</div>
-          </div>
-        </div>
-        <div class="flex-bookmark-image relative max-w-sm:hidden">
-          {metadata && metadata.image && (
-            <img class="!absolute w-full h-full object-cover"
-              src={metadata.image}
-              alt="title"
-              loading="lazy"
-              decoding="async"
-            />
-          )}
-        </div>
-      </a>
-    </div>
-  )
-}
-<Caption richTexts={(block.Bookmark || block.LinkPreview || block.Embed).Caption} />
+	{
+		url && (
+			<div class="flex w-full max-w-full overflow-hidden text-sm">
+				<a
+					href={url.toString()}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="w-fill flex select-none overflow-hidden rounded border border-gray-200 no-underline dark:border-gray-800"
+				>
+					<div class="overflow-hidden p-3 text-left text-gray-900 dark:text-gray-100">
+						<div class="trncate mb-0.5 h-6 overflow-hidden whitespace-nowrap text-base leading-5">
+							{metadata && metadata.title}
+						</div>
+						<div class="h-8 overflow-hidden text-xs leading-4 opacity-80">
+							{metadata && metadata.description}
+						</div>
+						<div class="mt-1.5 flex">
+							<div class="min-w-4 mr-1.5 h-4 w-4">
+								<img
+									class="inline-block max-w-full"
+									src={`https://www.google.com/s2/favicons?domain=${url.hostname}`}
+									alt="title"
+									loading="lazy"
+									decoding="async"
+								/>
+							</div>
+							<div class="overflow-hidden truncate whitespace-nowrap text-xs leading-4">
+								{url.origin}
+							</div>
+						</div>
+					</div>
+					<div class="flex-bookmark-image max-w-sm:hidden relative">
+						{metadata && metadata.image && (
+							<img
+								class="!absolute h-full w-full object-cover"
+								src={metadata.image}
+								alt="title"
+								loading="lazy"
+								decoding="async"
+							/>
+						)}
+					</div>
+				</a>
+			</div>
+		)
+	}
+	<Caption richTexts={(block.Bookmark || block.LinkPreview || block.Embed).Caption} block={block} />
 </div>
 
-
 <style>
-.flex-bookmark-image{
-  flex: 1 1 180px;
-}
+	.flex-bookmark-image {
+		flex: 1 1 180px;
+	}
 </style>
