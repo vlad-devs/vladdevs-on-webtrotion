@@ -1,14 +1,15 @@
 ---
 import { buildHeadingId } from "../../../lib/blog-helpers.ts";
 import { RichText } from "../../../lib/interfaces.ts";
-import {getBlock} from "../../../lib/notion/client.ts";
+import { getBlock } from "../../../lib/notion/client.ts";
 import { Post } from "../../../lib/interfaces.ts";
 import { getPostByPageId, getBlockParentPageId } from "../../../lib/notion/client";
 import { getPostLink } from "../../../lib/blog-helpers.ts";
+import { MENU_PAGES_COLLECTION } from "@/constants";
 
 export interface Props {
 	richText: RichText;
-  blockID?: string;
+	blockID?: string;
 }
 
 const { richText, blockID } = Astro.props;
@@ -19,21 +20,21 @@ let post: Post = null;
 let pageId = null;
 let current_page_id = null;
 
-if (richText.InternalHref?.BlockId)
-{
-  pageId = richText.InternalHref?.PageId;
-  if (pageId) {
-    post = await getPostByPageId(pageId);
-  }
-  block_linked = await getBlock(richText.InternalHref?.BlockId);
-  if (block_linked.Heading1 || block_linked.Heading2 || block_linked.Heading3)
-  {
-    block_linked_id = buildHeadingId(block_linked.Heading1 || block_linked.Heading2 || block_linked.Heading3);
-    current_page_id = blockID? await getBlockParentPageId(blockID):null;
-    //console.log(current_page_id, pageId, blockID);
-  }
-  //console.log(block_linked, block_linked_id);
+pageId = richText.InternalHref?.PageId;
+if (pageId) {
+	post = await getPostByPageId(pageId);
 }
+if (richText.InternalHref?.BlockId) {
+	block_linked = await getBlock(richText.InternalHref?.BlockId);
+	if (block_linked.Heading1 || block_linked.Heading2 || block_linked.Heading3) {
+		block_linked_id = buildHeadingId(
+			block_linked.Heading1 || block_linked.Heading2 || block_linked.Heading3,
+		);
+		current_page_id = blockID ? await getBlockParentPageId(blockID) : null;
+	}
+	//console.log(block_linked, block_linked_id);
+}
+// console.log(blockID, ":::", current_page_id, pageId, post?.Slug);
 ---
 
 {
@@ -42,8 +43,8 @@ if (richText.InternalHref?.BlockId)
     <a href={richText.Href} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
   ) : block_linked_id && post && current_page_id && pageId==current_page_id?(<a href={`#${block_linked_id}`} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>):
   block_linked_id && post?(
-    <a href={`${getPostLink(post.Slug)}#${block_linked_id}`} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
-  ): post && !block_linked?( <a href={getPostLink(post.Slug)} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
+    <a href={`${getPostLink(post.Slug, post.Collection===MENU_PAGES_COLLECTION)}#${block_linked_id}`} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
+  ): post?( <a href={getPostLink(post.Slug, post.Collection===MENU_PAGES_COLLECTION)} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
   ):
   (
     <slot />

@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { BASE_PATH, CUSTOM_DOMAIN, REQUEST_TIMEOUT_MS } from "@/constants";
+import { BASE_PATH, CUSTOM_DOMAIN, REQUEST_TIMEOUT_MS, HOME_PAGE_SLUG } from "@/constants";
 import type { Block, Heading1, Heading2, Heading3, RichText, Column } from "./interfaces";
 import { pathJoin } from "@/utils";
 import slugify from '@sindresorhus/slugify';
@@ -126,8 +126,9 @@ export const getNavLink = (nav: string) => {
   return pathJoin(BASE_PATH, nav);
 };
 
-export const getPostLink = (slug: string) => {
-  return pathJoin(BASE_PATH, `/posts/${slug}`);
+export const getPostLink = (slug: string, isRoot: boolean = false) => {
+  const linkedPath = isRoot ? (slug === HOME_PAGE_SLUG ? pathJoin(BASE_PATH, `/`) : pathJoin(BASE_PATH, `/${slug}`)) : pathJoin(BASE_PATH, `/posts/${slug}`);
+  return linkedPath;
 };
 
 export const getTagLink = (tag: string) => {
