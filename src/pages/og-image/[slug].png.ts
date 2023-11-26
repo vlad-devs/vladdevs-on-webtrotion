@@ -1,7 +1,7 @@
 import type { APIContext, GetStaticPaths } from "astro";
 // import { getEntryBySlug } from "astro:content";
 import satori, { type SatoriOptions } from "satori";
-import { html } from "satori-html";
+// import { html } from "satori-html";
 import { Resvg } from "@resvg/resvg-js";
 // import { siteConfig } from "@/site-config";
 // import { getAllPosts, getFormattedDate } from "@/utils";
@@ -9,12 +9,14 @@ import { getFormattedDate } from "@/utils";
 
 import RobotoMono from "@/assets/roboto-mono-regular.ttf";
 import RobotoMonoBold from "@/assets/roboto-mono-700.ttf";
+import JetBrainsMonoBold from "@/assets/JetBrainsMono-Bold.ttf";
 //ADDITION
-import { getAllPosts, getPostBySlug } from "@/lib/notion/client";
+import { getAllPosts, getPostBySlug, getAllPagesAndPosts } from "@/lib/notion/client";
+import { getCollections } from "@/utils";
 
 // import { siteInfo } from "@/utils";
 import { siteInfo } from "@/siteInfo";
-
+import { OG_SETUP } from "@/constants";
 
 const ogOptions: SatoriOptions = {
   width: 1200,
@@ -22,66 +24,882 @@ const ogOptions: SatoriOptions = {
   // debug: true,
   fonts: [
     {
-      name: "Roboto Mono",
-      data: Buffer.from(RobotoMono),
-      weight: 400,
-      style: "normal",
-    },
-    {
-      name: "Roboto Mono",
-      data: Buffer.from(RobotoMonoBold),
+      name: "JetBrainsMono-Bold",
+      data: Buffer.from(JetBrainsMonoBold),
       weight: 700,
       style: "normal",
     },
   ],
 };
 
-const markup = (title: string, pubDate: string) =>
-  html`<div tw="flex flex-col w-full h-full bg-[#1d1f21] text-[#c9cacc]">
-		<div tw="flex flex-col flex-1 w-full p-10 justify-center">
-			<p tw="text-2xl mb-6">${pubDate}</p>
-			<h1 tw="text-6xl font-bold leading-snug text-white">${title}</h1>
-		</div>
-		<div tw="flex items-center justify-between w-full p-10 border-t border-[#2bbc89] text-xl">
-			<div tw="flex items-center">
-				<svg height="60" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 272 480">
-					<path
-						d="M181.334 93.333v-40L226.667 80v40l-45.333-26.667ZM136.001 53.333 90.667 26.667v426.666L136.001 480V53.333Z"
-						fill="#B04304"
-					></path>
-					<path
-						d="m136.001 119.944 45.333-26.667 45.333 26.667-45.333 26.667-45.333-26.667ZM90.667 26.667 136.001 0l45.333 26.667-45.333 26.666-45.334-26.666ZM181.334 53.277l45.333-26.666L272 53.277l-45.333 26.667-45.333-26.667ZM0 213.277l45.333-26.667 45.334 26.667-45.334 26.667L0 213.277ZM136 239.944l-45.333-26.667v53.333L136 239.944Z"
-						fill="#FF5D01"
-					></path>
-					<path
-						d="m136 53.333 45.333-26.666v120L226.667 120V80L272 53.333V160l-90.667 53.333v240L136 480V306.667L45.334 360V240l45.333-26.667v53.334L136 240V53.333Z"
-						fill="#53C68C"
-					></path>
-					<path d="M45.334 240 0 213.334v120L45.334 360V240Z" fill="#B04304"></path>
-				</svg>
-				<p tw="ml-3 font-semibold">${siteInfo.title}</p>
-			</div>
-			<p>by ${siteInfo.author}</p>
-		</div>
-	</div>`;
+const obj_img_sq_without_desc = function (title: string, pubDate: string, img_url: string) {
+  return {
+    "type": "div",
+    "props": {
+      "style": {
+        "display": "flex",
+        "flexDirection": "column",
+        "width": "100%",
+        "height": "100%"
+      },
+      "children": [
+        {
+          "type": "div",
+          "props": {
+            "style": {
+              "height": "100%",
+              "width": "100%",
+              "display": "flex",
+              "backgroundColor": "white",
+              "fontFamily": "JetBrainsMono-Bold"
+            },
+            "children": [
+              null,
+              {
+                "type": "div",
+                "props": {
+                  "style": {
+                    "padding": "20px",
+                    "display": "flex",
+                    "width": "100%",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "alignItems": "stretch"
+                  },
+                  "children": [
+                    null,
+                    {
+                      "type": "div",
+                      "props": {
+                        "style": {
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "justifyContent": "space-between",
+                          "border": "1px solid #374151",
+                          "boxShadow": "5px 5px 0px #374151",
+                          "width": "100%",
+                          "height": "100%",
+                          "padding": "10px"
+                        },
+                        "children": [
+                          null,
+                          {
+                            "type": "div",
+                            "props": {
+                              "style": {
+                                "display": "flex",
+                                "flex": "1"
+                              },
+                              "children": [
+                                null,
+                                {
+                                  "type": "img",
+                                  "props": {
+                                    "src": img_url,
+                                    "style": {
+                                      "width": "100%",
+                                      "height": "100%",
+                                      "objectFit": "contain",
+                                      "objectPosition": "center"
+                                    },
+                                    "children": []
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          null,
+                          {
+                            "type": "div",
+                            "props": {
+                              "style": {
+                                "display": "flex",
+                                "flexDirection": "column",
+                                "flex": "1"
+                              },
+                              "children": [
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "32px",
+                                      "fontWeight": "700",
+                                      "lineHeight": "3rem",
+                                      "padding": "10px 0 50px 0",
+                                      "color": "#374151",
+                                      "flex": "1",
+                                      "display": "flex",
+                                      "fontFamily": "monospace"
+                                    },
+                                    "children": title
+                                  }
+                                },
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "16px",
+                                      "fontWeight": "700",
+                                      "color": "#374151",
+                                      "display": "flex",
+                                      "flexDirection": "row",
+                                      "justifyContent": "space-between",
+                                      "alignItems": "center"
+                                    },
+                                    "children": [
+                                      null,
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "children": pubDate
+                                        }
+                                      },
+                                      null,
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "style": {
+                                            "display": "flex",
+                                            "alignItems": "center"
+                                          },
+                                          "children": [
+                                            null,
+                                            {
+                                              "type": "span",
+                                              "props": {
+                                                "style": {
+                                                  "marginRight": "16px"
+                                                },
+                                                "children": siteInfo.author
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+
+const obj_img_sq_with_desc = function (title: string, pubDate: string, desc: string, img_url: string) {
+  return {
+    "type": "div",
+    "props": {
+      "style": {
+        "display": "flex",
+        "flexDirection": "column",
+        "width": "100%",
+        "height": "100%"
+      },
+      "children": [
+        {
+          "type": "div",
+          "props": {
+            "style": {
+              "height": "100%",
+              "width": "100%",
+              "display": "flex",
+              "backgroundColor": "white",
+              "fontFamily": "JetBrainsMono-Bold"
+            },
+            "children": [
+              null,
+              {
+                "type": "div",
+                "props": {
+                  "style": {
+                    "padding": "20px",
+                    "display": "flex",
+                    "width": "100%",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "alignItems": "stretch"
+                  },
+                  "children": [
+                    null,
+                    {
+                      "type": "div",
+                      "props": {
+                        "style": {
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "justifyContent": "space-between",
+                          "border": "1px solid #374151",
+                          "boxShadow": "5px 5px 0px #374151",
+                          "width": "100%",
+                          "height": "100%",
+                          "padding": "10px"
+                        },
+                        "children": [
+                          null,
+                          {
+                            "type": "div",
+                            "props": {
+                              "style": {
+                                "display": "flex",
+                                "flex": "1"
+                              },
+                              "children": [
+                                null,
+                                {
+                                  "type": "img",
+                                  "props": {
+                                    "src": img_url,
+                                    "style": {
+                                      "width": "100%",
+                                      "height": "100%",
+                                      "objectFit": "contain",
+                                      "objectPosition": "center"
+                                    },
+                                    "children": []
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          null,
+                          {
+                            "type": "div",
+                            "props": {
+                              "style": {
+                                "display": "flex",
+                                "flexDirection": "column",
+                                "flex": "1"
+                              },
+                              "children": [
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "32px",
+                                      "fontWeight": "700",
+                                      "lineHeight": "3rem",
+                                      "padding": "10px 0 50px 0",
+                                      "color": "#374151",
+                                      "flex": "0.4",
+                                      "display": "flex",
+                                      "fontFamily": "monospace"
+                                    },
+                                    "children": title
+                                  }
+                                },
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "24px",
+                                      "fontWeight": "700",
+                                      "lineHeight": "2rem",
+                                      "padding": "10px 0 50px 0",
+                                      "color": "#374151",
+                                      "flex": "1",
+                                      "display": "flex",
+                                      "fontFamily": "monospace"
+                                    },
+                                    "children": desc
+                                  }
+                                },
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "16px",
+                                      "fontWeight": "700",
+                                      "color": "#374151",
+                                      "display": "flex",
+                                      "flexDirection": "row",
+                                      "justifyContent": "space-between",
+                                      "alignItems": "center"
+                                    },
+                                    "children": [
+                                      null,
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "children": pubDate
+                                        }
+                                      },
+                                      null,
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "style": {
+                                            "display": "flex",
+                                            "alignItems": "center"
+                                          },
+                                          "children": [
+                                            null,
+                                            {
+                                              "type": "span",
+                                              "props": {
+                                                "style": {
+                                                  "marginRight": "16px"
+                                                },
+                                                "children": siteInfo.author
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+
+const obj_img_none_without_desc = function (title: string, pubDate: string) {
+  return {
+    "type": "div",
+    "props": {
+      "style": {
+        "display": "flex",
+        "flexDirection": "column",
+        "width": "100%",
+        "height": "100%"
+      },
+      "children": [
+        {
+          "type": "div",
+          "props": {
+            "style": {
+              "height": "100%",
+              "width": "100%",
+              "display": "flex",
+              "flexDirection": "column",
+              "alignItems": "center",
+              "justifyContent": "center",
+              "fontSize": "32px",
+              "fontWeight": "700",
+              "backgroundColor": "white",
+              "backgroundImage": "radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%),radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)",
+              "backgroundSize": "100px 100px",
+              "fontFamily": "JetBrainsMono-Bold"
+            },
+            "children": [
+              null,
+              {
+                "type": "div",
+                "props": {
+                  "style": {
+                    "padding": "20px",
+                    "display": "flex",
+                    "width": "100%",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "alignItems": "stretch"
+                  },
+                  "children": [
+                    null,
+                    {
+                      "type": "div",
+                      "props": {
+                        "style": {
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "justifyContent": "space-between",
+                          "border": "1px solid #374151",
+                          "boxShadow": "5px 5px 0px #374151",
+                          "width": "100%",
+                          "height": "100%",
+                          "padding": "10px"
+                        },
+                        "children": [
+                          null,
+                          {
+                            "type": "div",
+                            "props": {
+                              "style": {
+                                "display": "flex",
+                                "flexDirection": "column",
+                                "flex": "1"
+                              },
+                              "children": [
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "52px",
+                                      "fontWeight": "700",
+                                      "lineHeight": "4rem",
+                                      "padding": "10px 50px",
+                                      "color": "#374151",
+                                      "flex": "1",
+                                      "display": "flex"
+                                    },
+                                    "children": title
+                                  }
+                                },
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "24px",
+                                      "fontWeight": "700",
+                                      "color": "#374151",
+                                      "display": "flex",
+                                      "flexDirection": "row",
+                                      "justifyContent": "space-between",
+                                      "alignItems": "center",
+                                      "padding": "10px"
+                                    },
+                                    "children": [
+                                      null,
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "children": pubDate
+                                        }
+                                      },
+                                      null,
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "style": {
+                                            "display": "flex",
+                                            "alignItems": "center"
+                                          },
+                                          "children": [
+                                            null,
+                                            {
+                                              "type": "span",
+                                              "props": {
+                                                "style": {
+                                                  "marginRight": "16px"
+                                                },
+                                                "children": siteInfo.author
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+
+const obj_img_none_with_desc = function (title: string, pubDate: string, desc: string) {
+  return {
+    "type": "div",
+    "props": {
+      "style": {
+        "display": "flex",
+        "flexDirection": "column",
+        "width": "100%",
+        "height": "100%"
+      },
+      "children": [
+        {
+          "type": "div",
+          "props": {
+            "style": {
+              "height": "100%",
+              "width": "100%",
+              "display": "flex",
+              "flexDirection": "column",
+              "alignItems": "center",
+              "justifyContent": "center",
+              "fontSize": "32px",
+              "fontWeight": "700",
+              "backgroundColor": "white",
+              "backgroundImage": "radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%),radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)",
+              "backgroundSize": "100px 100px",
+              "fontFamily": "JetBrainsMono-Bold"
+            },
+            "children": [
+              null,
+              {
+                "type": "div",
+                "props": {
+                  "style": {
+                    "padding": "20px",
+                    "display": "flex",
+                    "width": "100%",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "alignItems": "stretch"
+                  },
+                  "children": [
+                    null,
+                    {
+                      "type": "div",
+                      "props": {
+                        "style": {
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "justifyContent": "space-between",
+                          "border": "1px solid #374151",
+                          "boxShadow": "5px 5px 0px #374151",
+                          "width": "100%",
+                          "height": "100%",
+                          "padding": "10px"
+                        },
+                        "children": [
+                          null,
+                          {
+                            "type": "div",
+                            "props": {
+                              "style": {
+                                "display": "flex",
+                                "flexDirection": "column",
+                                "flex": "1"
+                              },
+                              "children": [
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "52px",
+                                      "fontWeight": "700",
+                                      "lineHeight": "4rem",
+                                      "padding": "10px 50px",
+                                      "color": "#374151",
+                                      "flex": "0.4",
+                                      "display": "flex"
+                                    },
+                                    "children": title
+                                  }
+                                },
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "30px",
+                                      "fontWeight": "700",
+                                      "lineHeight": "2rem",
+                                      "padding": "10px 50px",
+                                      "color": "#374151",
+                                      "flex": "1",
+                                      "display": "flex"
+                                    },
+                                    "children": desc
+                                  }
+                                },
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "24px",
+                                      "fontWeight": "700",
+                                      "color": "#374151",
+                                      "display": "flex",
+                                      "flexDirection": "row",
+                                      "justifyContent": "space-between",
+                                      "alignItems": "center",
+                                      "padding": "10px"
+                                    },
+                                    "children": [
+                                      null,
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "children": pubDate
+                                        }
+                                      },
+                                      null,
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "style": {
+                                            "display": "flex",
+                                            "alignItems": "center"
+                                          },
+                                          "children": [
+                                            null,
+                                            {
+                                              "type": "span",
+                                              "props": {
+                                                "style": {
+                                                  "marginRight": "16px"
+                                                },
+                                                "children": siteInfo.author
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+
+const obj_img_bg = function (title: string, pubDate: string, img_url: string) {
+  return {
+    "type": "div",
+    "props": {
+      "style": {
+        "display": "flex",
+        "flexDirection": "column",
+        "width": "100%",
+        "height": "100%"
+      },
+      "children": [
+        {
+          "type": "div",
+          "props": {
+            "style": {
+              "height": "100%",
+              "width": "100%",
+              "display": "flex",
+              "flexDirection": "column",
+              "alignItems": "center",
+              "justifyContent": "center",
+              "fontSize": "32px",
+              "fontWeight": "700",
+              "backgroundColor": "white",
+              "fontFamily": "JetBrainsMono"
+            },
+            "children": [
+              null,
+              {
+                "type": "img",
+                "props": {
+                  "src": img_url,
+                  "style": {
+                    "position": "absolute",
+                    "top": "0",
+                    "left": "0",
+                    "height": "100%",
+                    "width": "100%",
+                    "maskImage": "linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 25%, rgba(255, 255, 255, 0.15) 25%, rgba(255, 255, 255, 0.3) 90%, rgba(255, 255, 255, 0.1) 90%)",
+                    "objectFit": "cover"
+                  },
+                  "children": []
+                }
+              },
+              null,
+              {
+                "type": "div",
+                "props": {
+                  "style": {
+                    "padding": "20px",
+                    "display": "flex",
+                    "width": "100%",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "alignItems": "stretch"
+                  },
+                  "children": [
+                    null,
+                    {
+                      "type": "div",
+                      "props": {
+                        "style": {
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "justifyContent": "space-between",
+                          "border": "1px solid #374151",
+                          "boxShadow": "5px 5px 0px #374151",
+                          "width": "100%",
+                          "height": "100%",
+                          "padding": "10px"
+                        },
+                        "children": [
+                          null,
+                          {
+                            "type": "div",
+                            "props": {
+                              "style": {
+                                "display": "flex",
+                                "flexDirection": "column",
+                                "flex": "1"
+                              },
+                              "children": [
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "px",
+                                      "fontWeight": "700",
+                                      "lineHeight": "3rem",
+                                      "padding": "10px 0 50px 0",
+                                      "color": "#374151",
+                                      "flex": "1",
+                                      "display": "flex"
+                                    },
+                                    "children": title
+                                  }
+                                },
+                                null,
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "style": {
+                                      "fontSize": "16px",
+                                      "fontWeight": "700",
+                                      "color": "#374151",
+                                      "display": "flex",
+                                      "flexDirection": "row",
+                                      "justifyContent": "space-between",
+                                      "alignItems": "center"
+                                    },
+                                    "children": [
+                                      null,
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "children": pubDate
+                                        }
+                                      },
+                                      null,
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "style": {
+                                            "display": "flex",
+                                            "alignItems": "center"
+                                          },
+                                          "children": [
+                                            null,
+                                            {
+                                              "type": "span",
+                                              "props": {
+                                                "style": {
+                                                  "marginRight": "16px"
+                                                },
+                                                "children": siteInfo.author
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
 
 export async function GET({ params: { slug } }: APIContext) {
-  // const post = await getEntryBySlug("post", slug!);
-  const post = await getPostBySlug(slug!);
-  // const title = post?.data.title ?? siteConfig.title;
-  const title = post?.Title ?? siteInfo.title;
-  // const postDate = getFormattedDate(
-  //   post?.data.updatedDate ?? post?.data.publishDate ?? Date.now(),
-  //   {
-  //     weekday: "long",
-  //     month: "long",
-  //   },
-  // );
-  const postDate = getFormattedDate(post?.Date ?? Date.now(), {
-    weekday: "long",
-    month: "long",
-  });
-  const svg = await satori(markup(title, postDate), ogOptions);
+  let chosen_markup;
+  let fallback_markup;
+  let keyStr = slug;
+  let type = "postpage";
+  if (keyStr?.includes("---")) {
+    keyStr = slug.split("---")[1];
+    type = slug.split("---")[0];
+  }
+  if (type == "postpage") {
+    const post = await getPostBySlug(keyStr!);
+    const title = post?.Title ?? siteInfo.title;
+    const postDate = getFormattedDate(
+      post?.Date ?? post?.LastUpdatedDate ?? Date.now()
+    );
+
+
+    if (OG_SETUP['COLUMNS'] == 1 && post?.FeaturedImage && post?.FeaturedImage.ExpiryTime && (Date.parse(post?.FeaturedImage.ExpiryTime) > Date.now()) && (post.FeaturedImage.Url.includes(".jpg") || post.FeaturedImage.Url.includes(".png") || post.FeaturedImage.Url.includes(".jpeg"))) {
+      chosen_markup = obj_img_bg(title, postDate, post.FeaturedImage.Url);
+    } else if (OG_SETUP['COLUMNS'] && post?.FeaturedImage && post?.FeaturedImage.ExpiryTime && (Date.parse(post?.FeaturedImage.ExpiryTime) > Date.now()) && (post.FeaturedImage.Url.includes(".jpg") || post.FeaturedImage.Url.includes(".png") || post.FeaturedImage.Url.includes(".jpeg"))) {
+      chosen_markup = post?.Excerpt && OG_SETUP['EXCERPT'] ? obj_img_sq_with_desc(title, postDate, post?.Excerpt, post.FeaturedImage.Url) : obj_img_sq_without_desc(title, postDate, post.FeaturedImage.Url);
+    } else {
+      chosen_markup = post?.Excerpt && OG_SETUP['EXCERPT'] ? obj_img_none_with_desc(title, postDate, post?.Excerpt) : obj_img_none_without_desc(title, postDate);
+    }
+    fallback_markup = post?.Excerpt ? obj_img_none_with_desc(title, postDate, post?.Excerpt) : obj_img_none_without_desc(title, postDate);
+  }
+  else if (type == "collectionpage") {
+    chosen_markup = obj_img_none_without_desc(keyStr + " : " + "A collection of posts", " ");
+  }
+  else if (type == "tagsindex") {
+    chosen_markup = obj_img_none_without_desc("All topics I've written about", " ");
+  }
+  else if (type == "tagpage") {
+    chosen_markup = obj_img_none_without_desc("All posts tagged with #" + keyStr, " ");
+  }
+  else {
+    chosen_markup = obj_img_none_without_desc("All posts in one place", " ");
+  }
+
+  // const svg = await satori(chosen_markup, ogOptions);
+  let svg;
+  try {
+    svg = await satori(chosen_markup, ogOptions);
+  } catch (error) {
+    console.error("Error in satori:", error);
+    // Fallback to a basic markup if satori fails
+    svg = await satori(fallback_markup, ogOptions);
+  }
   const png = new Resvg(svg).render().asPng();
   return new Response(png, {
     headers: {
@@ -92,6 +910,23 @@ export async function GET({ params: { slug } }: APIContext) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getAllPosts();
-  return posts.filter((post) => !post.FeaturedImage).map(({ Slug }) => ({ params: { slug: Slug } }));
+  const posts = await getAllPagesAndPosts();
+  const postsMap = posts.map(({ Slug }) => ({ params: { slug: Slug } }));
+
+  const collections = await getCollections();
+  const collectionMap = collections.map((collection) => ({
+    params: { slug: "collectionpage---" + collection }
+  }));
+
+  const uniqueTags = [...new Set(posts.flatMap((post) => post.Tags))];
+  const tagMap = uniqueTags.map((tag) => ({
+    params: { slug: "tagpage---" + tag.name }
+  }));
+
+  const tagsindex = { params: { slug: "tagsindex---index" } };
+  const postsindex = { params: { slug: "postsindex---index" } };
+
+  //Note: using featured image to generate og!
+  // return posts.map(({ Slug }) => ({ params: { slug: Slug } }));
+  return [...postsMap, ...collectionMap, ...tagMap, tagsindex, postsindex];
 };

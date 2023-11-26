@@ -41,17 +41,6 @@ import CustomIconDownloader from './src/integrations/custom-icon-downloader';
 import FeaturedImageDownloader from './src/integrations/featured-image-downloader';
 import PublicNotionCopier from './src/integrations/public-notion-copier';
 
-const siteMapConfig = HIDE_UNDERSCORE_SLUGS_IN_LISTS ? {
-  filter: (page) => {
-    console.log(page);
-    if (page.split("/")[-1].startsWith("_")) {
-      console.log('Excluding page from sitemap:', page);
-      return false;
-    }
-    return true;
-  },
-} : {};
-
 // https://astro.build/config
 export default defineConfig({
   // ! Please remember to replace the following site property with your own domain

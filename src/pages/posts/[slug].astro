@@ -9,7 +9,6 @@ import { extractTargetBlocks, filePath } from "@/lib/blog-helpers";
 import { downloadFile, getAllBlocksByBlockId, getAllPosts, getBlock } from "@/lib/notion/client";
 import type { Post } from "@/lib/interfaces";
 import { buildHeadings } from "@/utils";
-
 // export const getStaticPaths = (async () => {
 // 	const blogEntries = await getAllPosts();
 // 	return blogEntries.map((entry) => ({
@@ -86,16 +85,16 @@ await Promise.all(
 		.map((promise) => promise.then(downloadFile)),
 );
 
-let ogImage;
-if (post.FeaturedImage) {
-	ogImage = new URL(filePath(new URL(post.FeaturedImage.Url)), Astro.site).toString();
-}
+// let ogImage;
+// if (post.FeaturedImage) {
+// 	ogImage = new URL(filePath(new URL(post.FeaturedImage.Url)), Astro.site).toString();
+// }
 ---
 
 <!-- FIXME: use this maybe later for correct collect based stuff--><!-- <PostLayout post={entry}>
 	<Content />
-</PostLayout> -->
-<PostLayout post={post} ogImage={ogImage} headings={headings}>
+</PostLayout> --><!-- <PostLayout post={post} ogImage={ogImage} headings={headings}> -->
+<PostLayout post={post} headings={headings}>
 	<div class="post-body max-w-prose">
 		<NotionBlocks blocks={blocks} isRoot={true} />
 	</div>

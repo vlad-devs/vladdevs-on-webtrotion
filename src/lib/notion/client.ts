@@ -151,6 +151,12 @@ export async function getAllPosts(
   return postsCache;
 }
 
+export async function getAllPagesAndPosts() {
+  const pages = await getAllPosts({ and: [FOR_THIS_SITE] });
+
+  return pages;
+}
+
 export async function getPages() {
   const pages = await getAllPosts({ and: [ONLY_PAGES, FOR_THIS_SITE] });
 

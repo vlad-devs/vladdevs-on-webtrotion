@@ -86,7 +86,13 @@ await Promise.all(
 );
 ---
 
-<PageLayout meta={{ title: page.Title || siteInfo.title }}>
+<PageLayout
+	meta={{
+		title: page.Title || siteInfo.title,
+		description: page.Excerpt || siteInfo.description,
+		ogImage: `/og-image/${page.Slug}.png`,
+	}}
+>
 	<section>
 		<NotionBlocks blocks={blocks} isRoot={true} />
 	</section>
