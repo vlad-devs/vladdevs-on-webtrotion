@@ -3,6 +3,7 @@ import * as interfaces from "../../../lib/interfaces.ts";
 import { isYouTubeURL, parseYouTubeVideoId } from "../../../lib/blog-helpers.ts";
 import Caption from "../Caption.astro";
 import { filePath } from "../../../lib/blog-helpers";
+import EmbedGeneric from "./EmbedGeneric.astro";
 
 export interface Props {
 	block: interfaces.Block;
@@ -32,7 +33,9 @@ if (block.Video.External) {
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						allowfullscreen
 					/>
-				) : null
+				) : (
+					<EmbedGeneric url={url} />
+				)
 			) : (
 				<video class="max-w-sm:h-[220px] h-[340px] w-full" controls>
 					<source src={videoUrl} type="video/mp4" />
