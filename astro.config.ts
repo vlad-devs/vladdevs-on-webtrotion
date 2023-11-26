@@ -52,16 +52,16 @@ export default defineConfig({
     // mdx({}),
     tailwind({
       applyBaseStyles: false
-    }), sitemap(HIDE_UNDERSCORE_SLUGS_IN_LISTS ? {
+    }), sitemap({
       filter: (page) => {
         console.log(page);
-        if (page.split("/")[-1].startsWith("_")) {
+        if (page.includes("/_") && HIDE_UNDERSCORE_SLUGS_IN_LISTS) {
           console.log('Excluding page from sitemap:', page);
           return false;
         }
         return true;
       },
-    } : {}), prefetch(), astroImageTools,
+    }), prefetch(), astroImageTools,
     CoverImageDownloader(),
     CustomIconDownloader(),
     FeaturedImageDownloader(),

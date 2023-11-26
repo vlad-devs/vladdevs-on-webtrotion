@@ -3,10 +3,20 @@ import ThemeToggle from "../ThemeToggle.astro";
 import Search from "../Search.astro";
 import { getMenu } from "@/utils";
 import { siteInfo } from "@/site.config";
+import { filePath } from "@/lib/blog-helpers";
 
 const menuLinks = await getMenu();
 
 const url = new URL(Astro.request.url);
+
+let customIconURL: string = "";
+if (siteInfo.logo && siteInfo.logo.Type === "file") {
+	try {
+		customIconURL = filePath(new URL(siteInfo.logo.Url));
+	} catch (err) {
+		console.log("Invalid DB custom icon URL");
+	}
+}
 ---
 
 <script>
@@ -67,7 +77,7 @@ const url = new URL(Astro.request.url);
 			class="inline-flex items-center grayscale hover:filter-none sm:relative sm:inline-block"
 			aria-current={url.pathname === "/" ? "page" : false}
 		>
-			<!-- {siteInfo.favicon} -->
+			<!-- {siteInfo.favicon}
 			<svg
 				class="me-3 h-10 w-6 sm:absolute sm:start-[-4.5rem] sm:me-0 sm:h-20 sm:w-12"
 				aria-hidden="true"
@@ -88,7 +98,36 @@ const url = new URL(Astro.request.url);
 					fill="#53C68C"></path>
 				<path d="M45.334 240 0 213.334v120L45.334 360V240Z" fill="#B04304"></path>
 			</svg>
-			<span class="text-xl font-bold sm:text-2xl">{siteInfo.title}</span>
+			<span class="text-xl font-bold sm:text-2xl">{siteInfo.title}</span> -->
+
+			{
+				siteInfo.logo && siteInfo.logo.Type === "emoji" ? (
+					<>
+						<span class="sm:h-15 sm:w-15 me-3 h-10 w-10 sm:absolute sm:start-[-4.5rem] sm:me-0">
+							{siteInfo.logo.Emoji}
+						</span>
+						<span class="text-xl font-bold sm:text-2xl">{siteInfo.title}</span>
+					</>
+				) : siteInfo.logo && siteInfo.logo.Type === "external" ? (
+					<>
+						<img
+							class="sm:h-15 sm:w-15 me-3 h-10 w-10 object-contain sm:absolute sm:start-[-4.5rem] sm:me-0"
+							src={siteInfo.logo.Url}
+						/>
+						<span class="text-xl font-bold sm:text-2xl">{siteInfo.title}</span>
+					</>
+				) : siteInfo.logo && siteInfo.logo.Type === "file" && customIconURL ? (
+					<>
+						<img
+							src={customIconURL}
+							class="sm:h-15 sm:w-15 me-3 h-10 w-10 object-contain sm:absolute sm:start-[-4.5rem] sm:me-0"
+						/>
+						<span class="text-xl font-bold sm:text-2xl">{siteInfo.title}</span>
+					</>
+				) : (
+					<span class="text-xl font-bold sm:text-2xl">{siteInfo.title}</span>
+				)
+			}
 		</a>
 		<nav
 			id="navigation-menu"

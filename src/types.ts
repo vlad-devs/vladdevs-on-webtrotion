@@ -1,3 +1,6 @@
+
+import type { FileObject, Emoji } from "./lib/interfaces";
+
 export type SiteConfig = {
   author: string;
   title: string;
@@ -14,7 +17,7 @@ export type SiteConfig = {
     link: string;
     pingback?: string;
   };
-  favicon: string;
+  logo?: FileObject | Emoji | null;
 };
 
 export type PaginationLink = {
