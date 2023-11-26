@@ -40,7 +40,9 @@ export async function getCollections() {
 }
 
 
-export async function getMenu(): Promise<{ title: string; path: string }[]> {
+export async function getMenu(): Promise<
+  { title: string; path: string; children?: { title: string; path: string }[] }[]
+> {
   const pages = await getPages();
   // console.log(pages);
   const collections = await getCollections();
