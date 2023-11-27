@@ -40,11 +40,11 @@ if (richText.InternalHref?.BlockId) {
 {
 	/* prettier-ignore */
 	richText.Href && !richText.Mention && !richText.InternalHref? (
-    <a href={richText.Href} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
-  ) : block_linked_id && post && current_page_id && pageId==current_page_id?(<a href={`#${block_linked_id}`} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>):
+    <a href={richText.Href} class="text-link underline hover:no-underline underline-offset-4"><slot /></a>
+  ) : block_linked_id && post && current_page_id && pageId==current_page_id?(<a href={`#${block_linked_id}`} class="underline-offset-4 text-link underline hover:no-underline"><slot /></a>):
   block_linked_id && post?(
-    <a href={`${getPostLink(post.Slug, post.Collection===MENU_PAGES_COLLECTION)}#${block_linked_id}`} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
-  ): post?( <a href={getPostLink(post.Slug, post.Collection===MENU_PAGES_COLLECTION)} class="text-blue-600 underline dark:text-blue-500 hover:no-underline"><slot /></a>
+    <a href={`${getPostLink(post.Slug, post.Collection===MENU_PAGES_COLLECTION)}#${block_linked_id}`} class="underline-offset-4 text-link underline hover:no-underline"><slot /></a>
+  ): post?( <a href={getPostLink(post.Slug, post.Collection===MENU_PAGES_COLLECTION)} class="underline-offset-4 text-link underline hover:no-underline"><slot /></a>
   ):
   (
     <slot />

@@ -12,7 +12,7 @@ const { richTexts, block } = Astro.props;
 
 {
 	(
-		<div class="caption pt-1 text-sm text-gray-500">
+		<div class="caption pt-1 text-sm text-accent-2/50">
 			{richTexts.map((richText: interfaces.RichText) => (
 				<RichTextB richText={richText} blockID={block.Id} />
 			))}

@@ -490,20 +490,29 @@ export async function downloadFile(url: URL, optimize_img: boolean = true, isFav
   const isImage = res.headers["content-type"]?.startsWith("image/");
 
   const processFavicon = async (sourcePath: string) => {
-    const faviconPngPath = './public/favicon.png';
+    const favicon16Path = './public/favicon16.png';
+    const favicon32Path = './public/favicon32.png';
     const faviconIcoPath = './public/favicon.ico';
 
     try {
-      // Save the original image as favicon.png
+      // Save the original image as favicon16.png (16x16)
       await sharp(sourcePath)
-        .toFile(faviconPngPath);
+        .resize(16, 16)
+        .toFile(favicon16Path);
 
-      // Convert favicon.png to favicon.ico
-      const icoBuffer = await pngToIco(faviconPngPath);
+      // Save the original image as favicon32.png (32x32)
+      await sharp(sourcePath)
+        .resize(32, 32)
+        .toFile(favicon32Path);
+
+      // Convert both favicon16.png and favicon32.png to favicon.ico
+      const icoBuffer = await pngToIco([favicon16Path, favicon32Path]);
       fs.writeFileSync(faviconIcoPath, icoBuffer);
 
-      // Delete the temporary favicon.png file
-      fs.unlinkSync(faviconPngPath);
+      // Delete the temporary PNG files
+      fs.unlinkSync(favicon16Path);
+      fs.unlinkSync(favicon32Path);
+
     } catch (err) {
       console.error('Error processing favicon:', err);
     }

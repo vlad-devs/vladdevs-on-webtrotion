@@ -25,7 +25,7 @@ const { post, as: Tag = "div", withDesc = false } = Astro.props;
 // const postDate = post.data.updatedDate ?? post.data.publishDate;
 ---
 
-<FormattedDate date={new Date(post.Date)} class="min-w-[120px] text-gray-500" />
+<FormattedDate date={new Date(post.Date)} class="min-w-[120px] text-accent/70" />
 <Tag>
 	<a href={`/posts/${post.Slug}/`} class="cactus-link" rel="prefetch">
 		{post.Title}

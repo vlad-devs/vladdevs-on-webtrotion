@@ -14,7 +14,16 @@ export default (): AstroIntegration => ({
       const createCssVariables = (theme) => {
         let cssContent = '';
         for (const key in config.THEME.colors) {
-          const color = theme_config.colors[key];
+          let color = theme_config.colors[key][theme];
+          if (!color) {
+            if (key.includes('bg')) {
+              // Set default background colors
+              color = theme === 'light' ? '255 255 255' : '0 0 0'; // White for light theme, Black for dark theme
+            } else {
+              // Set default text and other colors
+              color = theme === 'light' ? '0 0 0' : '255 255 255'; // Black for light theme, White for dark theme
+            }
+          }
           cssContent += `--theme-${key}: ${color[theme]};\n`;
         }
         return cssContent;

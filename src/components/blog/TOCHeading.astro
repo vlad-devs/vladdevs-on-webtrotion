@@ -8,12 +8,15 @@ interface Props {
 const {
 	heading: { slug, text, depth, subheadings },
 } = Astro.props;
+// depth <= 1 ? "mt-3" : "mt-2 text-[0.6875rem]"
 ---
 
 <!-- //NOTE: change this to depth 1 everywhere because that is how it works with notion at the moment -->
 <li class={`${depth > 1 ? "ms-2" : ""}`}>
 	<a
-		class={`block line-clamp-2 hover:text-accent ${depth <= 1 ? "mt-3" : "mt-2 text-[0.6875rem]"}`}
+		class={`block line-clamp-2 hover:text-accent no-underline hover:underline hover:underline-offset-4 ${
+			depth <= 1 ? "mt-3" : "mt-2"
+		}`}
 		href={`#${slug}`}
 		aria-label={`Scroll to section: ${text}`}>{text}</a
 	>
