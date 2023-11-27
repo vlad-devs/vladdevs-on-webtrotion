@@ -24,7 +24,7 @@ export default (): AstroIntegration => ({
               color = theme === 'light' ? '0 0 0' : '255 255 255'; // Black for light theme, White for dark theme
             }
           }
-          cssContent += `--theme-${key}: ${color[theme]};\n`;
+          cssContent += `--theme-${key}: ${color};\n`;
         }
         return cssContent;
       };

@@ -55,7 +55,7 @@ const code_inject = code.startsWith("<!DOCTYPE html>");
 			language === 'mermaid' ? (
          <pre class="rounded mermaid p-4">{code}</pre>
       ) : (
-          <pre class={`rounded whitespace-pre-wrap p-4 overflow-auto break-normal leading-6 tabular-nums text-left no-hyphens bg-blue-950 text-sky-600 ${"language-"+language}`}><code set:html={Prism.highlight(code, grammar, language)} /></pre>
+          <pre class={`rounded whitespace-pre-wrap p-4 overflow-auto break-normal leading-6 tabular-nums text-left no-hyphens bg-slate-900 text-sky-600 ${"language-"+language}`}><code set:html={Prism.highlight(code, grammar, language)} /></pre>
       )
 		}
 	</div>
