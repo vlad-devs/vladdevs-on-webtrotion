@@ -43,9 +43,10 @@ const socialImageURL = new URL(ogImage ? ogImage : "/social-card.png", Astro.url
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:site_name" content={siteInfo.title} />
 <meta property="og:locale" content={siteInfo.ogLocale} />
-{ogImage && <meta property="og:image" content={socialImageURL} />}
+{ogImage && (<meta property="og:image" content={socialImageURL} />
 <meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
+<meta property="og:image:height" content="630" />)}
+
 {
 	articleDate && (
 		<>
@@ -60,7 +61,7 @@ const socialImageURL = new URL(ogImage ? ogImage : "/social-card.png", Astro.url
 <meta property="twitter:url" content={canonicalURL} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={socialImageURL} />
+{ogImage && (<meta property="twitter:image" content={socialImageURL} />)}
 
 {/* Sitemap */}
 <link rel="sitemap" href="/sitemap-index.xml" />
