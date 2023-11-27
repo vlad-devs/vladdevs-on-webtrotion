@@ -24,5 +24,17 @@
   "OG_SETUP": {
     "COLUMNS": 2,
     "EXCERPT": true
+  },
+  "SOCIALS": {
+    "email": "mailto:nerdymomocat@gmail.com",
+    "github": "",
+    "googlescholar": "",
+    "semanticscholar": "",
+    "dblp": "",
+    "facebook": "",
+    "twitter": "",
+    "threads": "",
+    "instagram": "",
+    "mastodon": ""
   }
 }

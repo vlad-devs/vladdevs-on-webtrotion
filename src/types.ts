@@ -1,6 +1,13 @@
 
 import type { FileObject, Emoji } from "./lib/interfaces";
 
+export type SocialLink = {
+  name: string;
+  friendlyName: string;
+  link: string;
+  isWebmention?: boolean;
+};
+
 export type SiteConfig = {
   author: string;
   title: string;

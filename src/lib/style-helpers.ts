@@ -63,9 +63,21 @@ export const textToAstroIcon = (text: string) => {
     "download": "mdi:download-circle",
     "copy-code": "mdi:content-copy",
     "copied-to-clipboard": "mdi:clipboard-check",
-    "rss": "mdi:rss"
+    "rss": "mdi:rss",
+    "dblp": "academicons:dblp",
+    "email": "mdi:email",
+    "github": "mdi:github",
+    "googlescholar": "academicons:google-scholar",
+    "facebook": "mdi:facebook",
+    "twitter": "mdi:twitter",
+    "threads": "simple-icons:threads",
+    "instagram": "mdi:instagram",
+    "mastodon": "mdi:mastodon",
+    "semanticscholar": "academicons:semantic-scholar"
+
   }
   if (text in textIconMap) {
     return textIconMap[text];
   }
+  return "";
 }

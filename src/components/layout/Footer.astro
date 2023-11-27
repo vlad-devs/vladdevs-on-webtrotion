@@ -3,12 +3,13 @@
 // import { siteConfig } from "@/site-config";
 // import { menuLinks, siteConfig } from "@/site-config";
 import { getMenu } from "@/utils";
+import SocialList from "@/components/SocialList";
 
 const menuLinks = await getMenu();
 ---
 
 <footer
-	class="mt-auto flex w-full flex-col items-center justify-center gap-y-2 pb-4 pt-20 text-center align-top text-gray-500 sm:flex-row sm:justify-between sm:text-xs"
+	class="mt-auto flex w-full flex-col items-center justify-center gap-y-2 pb-4 pt-20 text-center align-top text-xs text-gray-500 sm:flex-row sm:justify-between lg:-ml-[25%] lg:w-[150%]"
 >
 	<!-- <div class="me-0 sm:me-4">
 		Copyright &copy; {year}{" "}
@@ -16,17 +17,23 @@ const menuLinks = await getMenu();
 	</div> -->
 	<nav
 		aria-label="More on this site"
-		class="flex flex-wrap gap-x-2 sm:gap-x-0 sm:divide-x sm:divide-gray-500"
+		class="sm: flex flex-wrap gap-x-2 rounded border-b-2 border-t-2 sm:gap-x-0 sm:divide-x sm:divide-gray-500 sm:border-none"
 	>
 		{
 			menuLinks.map((link) => (
-				<a
-					href={link.path}
-					class="px-4 py-2 sm:px-2 sm:py-0 sm:hover:text-textColor sm:hover:underline"
-				>
-					{link.title}
-				</a>
+				<>
+					<a
+						href={link.path}
+						class="px-4 py-2 sm:px-2 sm:py-0 sm:hover:text-textColor sm:hover:underline"
+					>
+						{link.title}
+					</a>
+					<div class="flex items-center sm:hidden">
+						<p>•</p>
+					</div>
+				</>
 			))
 		}
 	</nav>
+	<SocialList />
 </footer>

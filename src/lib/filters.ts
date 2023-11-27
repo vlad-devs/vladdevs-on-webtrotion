@@ -29,7 +29,7 @@ const PUB_FILTER_EMPTY: PropertyFilterObject = {
 };
 
 export const FOR_THIS_SITE: CompoundFilterObject = {
-  or: [PUB_FILTER_CONTAINS, PUB_FILTER_EMPTY]
+  or: PUBLISH_ON_FILTER ? [PUB_FILTER_CONTAINS, PUB_FILTER_EMPTY] : [PUB_FILTER_EMPTY]
 };
 
 export const filterBySlug = (slug: string) => {

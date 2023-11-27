@@ -1,41 +1,72 @@
 ---
 import { Icon } from "astro-icon";
+import config from "constants-config.json";
+const key_value_from_json = { ...config };
+const socials_links = key_value_from_json["SOCIALS"];
+import type { SocialLink } from "@/types";
+import { textToAstroIcon } from "@/lib/style-helpers";
 
-/** 
+/**
 	Uses https://github.com/natemoo-re/astro-icon#readme
 	Find icons @ https://icones.js.org/
 */
-const socialLinks: Array<{
-	name: string;
-	friendlyName: string;
-	link: string;
-	isWebmention?: boolean;
-}> = [
-	{
-		name: "mdi:github",
-		friendlyName: "Github",
-		link: "https://github.com/chrismwilliams/astro-cactus",
-	},
-	{
-		name: "mdi:mastodon",
-		friendlyName: "Mastodon",
-		link: "#",
-	},
-	{
-		name: "mdi:linkedin",
-		friendlyName: "LinkedIn",
-		link: "#",
-	},
-	{
-		name: "mdi:email",
-		friendlyName: "email",
-		link: "mailto:astro-cactus@chriswilliams.dev",
-		isWebmention: true,
-	},
-];
+// const socialLinks: Array<{
+// 	name: string;
+// 	friendlyName: string;
+// 	link: string;
+// 	isWebmention?: boolean;
+// }> = [
+// 	{
+// 		name: "mdi:github",
+// 		friendlyName: "Github",
+// 		link: "https://github.com/chrismwilliams/astro-cactus",
+// 	},
+// 	{
+// 		name: "mdi:mastodon",
+// 		friendlyName: "Mastodon",
+// 		link: "#",
+// 	},
+// 	{
+// 		name: "mdi:linkedin",
+// 		friendlyName: "LinkedIn",
+// 		link: "#",
+// 	},
+// 	{
+// 		name: "mdi:email",
+// 		friendlyName: "email",
+// 		link: "mailto:astro-cactus@chriswilliams.dev",
+// 		isWebmention: true,
+// 	},
+// ];
+
+const mapSocialLinks = (socialLinksObject: { [key: string]: string }): SocialLink[] => {
+	return Object.entries(socialLinksObject)
+		.map(([key, value]): SocialLink => {
+			// Handling special case for email
+			let iconname = textToAstroIcon(key);
+			iconname = iconname ? iconname : "mdi:web";
+			if (key === "email") {
+				return {
+					name: iconname,
+					friendlyName: key.charAt(0).toUpperCase() + key.slice(1), // Capitalize the first letter
+					link: value.startsWith("mailto:") ? value : `mailto:${value}`,
+					isWebmention: true,
+				};
+			}
+
+			return {
+				name: iconname,
+				friendlyName: key.charAt(0).toUpperCase() + key.slice(1), // Capitalize the first letter
+				link: value,
+			};
+		})
+		.filter((link) => link.link); // Filter out empty links
+};
+
+const socialLinks = mapSocialLinks(socials_links);
 ---
 
-<div class="flex flex-wrap items-end gap-x-4">
+<div class="flex flex-wrap items-center gap-x-4">
 	<p>Find me on</p>
 	<ul class="flex flex-1 items-center gap-x-2 sm:flex-initial">
 		{
