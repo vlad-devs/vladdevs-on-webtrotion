@@ -466,6 +466,7 @@ export async function downloadFile(url: URL) {
   }
 
   const BASE_DIR = "./public/notion/";
+  // const BASE_DIR = "./src/notion-assets/";
   if (!fs.existsSync(BASE_DIR)) {
     fs.mkdirSync(BASE_DIR);
   }

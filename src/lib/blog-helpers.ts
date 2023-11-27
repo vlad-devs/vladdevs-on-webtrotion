@@ -33,6 +33,7 @@ export const getSite = function () {
 export const filePath = (url: URL): string => {
   const [dir, filename] = url.pathname.split("/").slice(-2);
   return pathJoin(BASE_PATH, `/notion/${dir}/${filename}`);
+  // return pathJoin(BASE_PATH, `./src/notion-assets/${dir}/${filename}`);
 };
 
 export const extractTargetBlocks = (blockType: string, blocks: Block[]): Block[] => {
