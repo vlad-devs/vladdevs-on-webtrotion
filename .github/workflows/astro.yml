@@ -1,0 +1,45 @@
+name: Deploy to GitHub Pages
+
+on:
+  # push:
+  #   branches: [ main ]
+  # schedule:
+  #   - cron: '0 */8 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  NOTION_API_SECRET: ${{ secrets.NOTION_API_SECRET }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: github-pages
+    steps:
+      - name: Checkout your repository using git
+        uses: actions/checkout@v3
+
+      - name: Set and log environment secrets and variables
+        run: |
+          # echo "DATABASE_ID = $DATABASE_ID"
+          echo "NOTION_API_SECRET = $NOTION_API_SECRET"
+
+      - name: Install, build, and upload your site
+        uses: withastro/action@v1
+        with:
+          path: .
+          node-version: 20
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
