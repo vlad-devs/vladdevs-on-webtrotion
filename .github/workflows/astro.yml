@@ -12,7 +12,12 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 env:
+  BUILD_PATH: "."
   NOTION_API_SECRET: ${{ secrets.NOTION_API_SECRET }}
 
 jobs:
@@ -23,23 +28,50 @@ jobs:
       - name: Checkout your repository using git
         uses: actions/checkout@v3
 
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 21
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v3
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{ env.BUILD_PATH }}
+
       - name: Set and log environment secrets and variables
         run: |
           # echo "DATABASE_ID = $DATABASE_ID"
           echo "NOTION_API_SECRET = $NOTION_API_SECRET"
 
-      - name: Install, build, and upload your site
-        uses: withastro/action@v1
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          path: .
-          node-version: 20
+          path: ${{ env.BUILD_PATH }}/dist
+
+      - name: Build with Astro
+        run: |
+          npm astro build
+          # or if you prefer yarn, use: yarn build
+          # --site and --base flags can be included if needed for Astro
+          # --site steps.pages.outputs.origin" \
+          # --base steps.pages.outputs.base_path"
+        # working-directory: [your working directory, if not root]
+
+
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    name: Deploy
     environment:
       name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v2
