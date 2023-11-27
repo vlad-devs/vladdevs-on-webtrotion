@@ -1,34 +1,10 @@
 import fetch from "node-fetch";
-import { BASE_PATH, CUSTOM_DOMAIN, REQUEST_TIMEOUT_MS, HOME_PAGE_SLUG } from "@/constants";
+import { REQUEST_TIMEOUT_MS, HOME_PAGE_SLUG } from "@/constants";
 import type { Block, Heading1, Heading2, Heading3, RichText, Column } from "./interfaces";
 import { pathJoin } from "@/utils";
 import slugify from '@sindresorhus/slugify';
 
-export const getSite = function () {
-  if (CUSTOM_DOMAIN) {
-    return new URL(BASE_PATH, `https://${CUSTOM_DOMAIN}`).toString();
-  }
-
-  if (process.env.VERCEL && process.env.VERCEL_URL) {
-    return new URL(BASE_PATH, `https://${process.env.VERCEL_URL}`).toString();
-  }
-
-  if (process.env.CF_PAGES) {
-    if (process.env.CF_PAGES_BRANCH !== 'main') {
-      return new URL(BASE_PATH, process.env.CF_PAGES_URL).toString();
-    }
-
-    return new URL(
-      BASE_PATH,
-      `https://${new URL(process.env.CF_PAGES_URL).host
-        .split('.')
-        .slice(1)
-        .join('.')}`
-    ).toString();
-  }
-
-  return new URL(BASE_PATH, 'http://localhost:4321').toString();
-};
+const BASE_PATH = import.meta.env.BASE_URL;
 
 export const filePath = (url: URL): string => {
   const [dir, filename] = url.pathname.split("/").slice(-2);

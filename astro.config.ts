@@ -23,8 +23,12 @@ const getSite = function () {
     }
     return new URL(BASE_PATH, `https://${new URL(process.env.CF_PAGES_URL).host.split('.').slice(1).join('.')}`).toString();
   }
+  if (process.env.GITHUB_PAGES) {
+    return new URL(process.env.BASE || BASE_PATH, `https://${CUSTOM_DOMAIN}`).toString();
+  }
   return new URL(BASE_PATH, 'http://localhost:4321').toString();
 };
+
 import CoverImageDownloader from './src/integrations/cover-image-downloader';
 import CustomIconDownloader from './src/integrations/custom-icon-downloader';
 import FeaturedImageDownloader from './src/integrations/featured-image-downloader';
@@ -33,13 +37,13 @@ import CSSWriter from './src/integrations/theme-constants-to-css';
 
 import robotsTxt from "astro-robots-txt";
 
-// https://astro.build/config
+import config from "./constants-config.json";
+const key_value_from_json = { ...config };
+
 export default defineConfig({
-  // ! Please remember to replace the following site property with your own domain
-  //FIXME: what do I do here and how to directly import it?
-  // site: "https://astro-cactus.chriswilliams.dev/",
   site: getSite(),
-  base: BASE_PATH,
+  base: process.env.BASE || BASE_PATH,
+  redirects: key_value_from_json["REDIRECTS"] ? key_value_from_json["REDIRECTS"] : {},
   integrations: [
     // mdx({}),
     tailwind({
@@ -66,6 +70,7 @@ export default defineConfig({
     }
   }
 });
+
 function rawFonts(ext: Array<string>) {
   return {
     name: "vite-plugin-raw-fonts",
