@@ -62,7 +62,7 @@
     "data-reactions-enabled": true
   },
   "NUMBER_OF_POSTS_PER_PAGE": 10,
-  "ENABLE_LIGHTBOX": true,
+  "ENABLE_LIGHTBOX": false,
   "REQUEST_TIMEOUT_MS": "10000",
   "MENU_PAGES_COLLECTION": "main",
   "HEADING_BLOCKS": [
