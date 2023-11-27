@@ -9,6 +9,7 @@ import WebMentions from "@/components/blog/webmentions/index";
 //ADDED
 import type { Post } from "src/lib/interfaces";
 import type { Heading } from "@/types";
+import PostComments from "@/components/blog/PostComments";
 
 //FIXME: so why is this this way?
 
@@ -65,7 +66,10 @@ const articleDate = new Date(post.Date).toISOString();
 			<!-- <div id="blog-hero"><BlogHero content={post} /></div> -->
 			<div class="mt-12">
 				<slot />
+				<hr class="divider w-70 mx-auto my-4 h-1 rounded border-0 bg-accent/30" />
+
 				<WebMentions />
+				<PostComments client:visible />
 			</div>
 		</article>
 	</div>

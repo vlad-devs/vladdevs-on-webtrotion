@@ -21,6 +21,7 @@
     "@sindresorhus/slugify": "^2.2.1",
     "@types/prismjs": "^1.26.3",
     "astro": "^3.2.3",
+    "astro-google-analytics": "^1.0.3",
     "astro-google-fonts-optimizer": "^0.2.2",
     "astro-icon": "^0.8.1",
     "astro-robots-txt": "^1.0.0",

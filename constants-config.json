@@ -18,26 +18,6 @@
   },
   "CUSTOM_DOMAIN": "",
   "BASE_PATH": "",
-  "NUMBER_OF_POSTS_PER_PAGE": 10,
-  "ENABLE_LIGHTBOX": true,
-  "REQUEST_TIMEOUT_MS": "10000",
-  "MENU_PAGES_COLLECTION": "main",
-  "HEADING_BLOCKS": [
-    "heading_1",
-    "heading_2",
-    "heading_3"
-  ],
-  "PUBLISH_ON_FILTER": "nerdymomocat.github.io",
-  "FULL_PREVIEW_COLLECTIONS": [
-    "Stream"
-  ],
-  "HIDE_UNDERSCORE_SLUGS_IN_LISTS": true,
-  "HOME_PAGE_SLUG": "index",
-  "OG_SETUP": {
-    "COLUMNS": 2,
-    "EXCERPT": true
-  },
-  "OPTIMIZE_IMAGES": true,
   "THEME": {
     "colors": {
       "bgColor": {
@@ -65,10 +45,40 @@
         "dark": "205 254 183"
       }
     },
-    "fontFamily": {
-      "sans": [],
-      "serif": [],
-      "mono": []
+    "fontFamily-Google Fonts": {
+      "combined_url": "https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Victor+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap",
+      "sans_font_name": "Saira",
+      "serif_font_name": "",
+      "mono_font_name": "Victor\\ Mono"
     }
-  }
+  },
+  "GISCUS": {
+    "data-repo": "nerdymomocat/nerdymomocat.github.io",
+    "data-repo-id": " R_kgDOJoxbeA",
+    "data-category": "Announcements",
+    "data-category-id": "DIC_kwDOJoxbeM4CWzrO",
+    "data-mapping": "pathname",
+    "data-input-position": "top",
+    "data-reactions-enabled": true
+  },
+  "NUMBER_OF_POSTS_PER_PAGE": 10,
+  "ENABLE_LIGHTBOX": true,
+  "REQUEST_TIMEOUT_MS": "10000",
+  "MENU_PAGES_COLLECTION": "main",
+  "HEADING_BLOCKS": [
+    "heading_1",
+    "heading_2",
+    "heading_3"
+  ],
+  "PUBLISH_ON_FILTER": "nerdymomocat.github.io",
+  "FULL_PREVIEW_COLLECTIONS": [
+    "Stream"
+  ],
+  "HIDE_UNDERSCORE_SLUGS_IN_LISTS": true,
+  "HOME_PAGE_SLUG": "index",
+  "OG_SETUP": {
+    "COLUMNS": 2,
+    "EXCERPT": true
+  },
+  "OPTIMIZE_IMAGES": true
 }
