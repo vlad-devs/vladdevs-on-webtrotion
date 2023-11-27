@@ -62,7 +62,8 @@ export const textToAstroIcon = (text: string) => {
     "🗓️": "mdi:calendar-blank",
     "download": "mdi:download-circle",
     "copy-code": "mdi:content-copy",
-    "copied-to-clipboard": "mdi:clipboard-check"
+    "copied-to-clipboard": "mdi:clipboard-check",
+    "rss": "mdi:rss"
   }
   if (text in textIconMap) {
     return textIconMap[text];

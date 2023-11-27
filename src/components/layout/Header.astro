@@ -4,6 +4,8 @@ import Search from "../Search.astro";
 import { getMenu } from "@/utils";
 import { siteInfo } from "@/site.config";
 import { filePath } from "@/lib/blog-helpers";
+import Icon from "astro-icon";
+import { textToAstroIcon } from "@/lib/style-helpers";
 
 const menuLinks = await getMenu();
 
@@ -68,7 +70,7 @@ if (siteInfo.logo && siteInfo.logo.Type === "file") {
 
 <header
 	id="main-header"
-	class="group relative mb-16 flex items-center sm:ps-[4.5rem]"
+	class="group relative mb-16 flex w-full items-center justify-between sm:ps-[4.5rem] lg:-ml-[25%] lg:w-[150%]"
 	transition:animate="none"
 >
 	<div class="flex sm:flex-col">
@@ -108,7 +110,7 @@ if (siteInfo.logo && siteInfo.logo.Type === "file") {
 		</a>
 		<nav
 			id="navigation-menu"
-			class="absolute -inset-x-4 top-14 hidden flex-col items-end rounded-md bg-bgColor/[.97] py-2 text-accent shadow backdrop-blur group-[.menu-open]:z-50 group-[.menu-open]:flex sm:static sm:z-auto sm:-ms-4 sm:mt-1 sm:flex sm:flex-row sm:items-center sm:divide-x sm:rounded-none sm:bg-transparent sm:py-0 sm:shadow-none sm:backdrop-blur-none"
+			class="absolute -inset-x-4 top-14 hidden flex-col items-end rounded-md bg-bgColor/[.97] py-2 text-accent shadow backdrop-blur group-[.menu-open]:z-50 group-[.menu-open]:flex sm:static sm:z-auto sm:-ms-4 sm:mt-1 sm:flex sm:flex-row sm:items-center sm:rounded-none sm:bg-transparent sm:py-0 sm:shadow-none sm:backdrop-blur-none"
 			aria-label="Main menu"
 		>
 			{
@@ -125,45 +127,51 @@ if (siteInfo.logo && siteInfo.logo.Type === "file") {
 			}
 		</nav>
 	</div>
-	<Search />
-	<ThemeToggle />
-	<mobile-button>
-		<button
-			id="toggle-navigation-menu"
-			class="group relative ms-4 h-7 w-7 sm:invisible sm:hidden"
-			type="button"
-			aria-label="Open main menu"
-			aria-expanded="false"
-			aria-haspopup="menu"
-		>
-			<svg
-				id="line-svg"
-				class="absolute start-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 transition-all group-aria-expanded:scale-0 group-aria-expanded:opacity-0"
-				aria-hidden="true"
-				focusable="false"
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke-width="1.5"
-				stroke="currentColor"
+	<div class="flex flex-row">
+		<div class="h-10 w-10 items-center justify-center rounded-md p-1.5 hover:text-accent">
+			<a href="/rss.xml"><Icon name={textToAstroIcon("rss")} class="h-7 w-7 hover:text-accent" /></a
 			>
-				<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"
-				></path>
-			</svg>
-			<svg
-				id="cross-svg"
-				class="absolute start-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-0 text-accent opacity-0 transition-all group-aria-expanded:scale-100 group-aria-expanded:opacity-100"
-				class="text-accent"
-				aria-hidden="true"
-				focusable="false"
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke-width="1.5"
-				stroke="currentColor"
+		</div>
+		<Search />
+		<ThemeToggle />
+		<mobile-button>
+			<button
+				id="toggle-navigation-menu"
+				class="group relative ms-4 h-7 w-7 sm:invisible sm:hidden"
+				type="button"
+				aria-label="Open main menu"
+				aria-expanded="false"
+				aria-haspopup="menu"
 			>
-				<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-			</svg>
-		</button>
-	</mobile-button>
+				<svg
+					id="line-svg"
+					class="absolute start-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 transition-all group-aria-expanded:scale-0 group-aria-expanded:opacity-0"
+					aria-hidden="true"
+					focusable="false"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"
+					></path>
+				</svg>
+				<svg
+					id="cross-svg"
+					class="absolute start-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-0 text-accent opacity-0 transition-all group-aria-expanded:scale-100 group-aria-expanded:opacity-100"
+					class="text-accent"
+					aria-hidden="true"
+					focusable="false"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+				</svg>
+			</button>
+		</mobile-button>
+	</div>
 </header>
