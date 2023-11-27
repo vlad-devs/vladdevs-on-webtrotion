@@ -5,8 +5,8 @@
 @layer base {
   :root {
     color-scheme: light;
-    --theme-bgColor: 249 249 249;
-    --theme-textColor: 34 39 42;
+    --theme-bg: 249 249 249;
+    --theme-text: 34 39 42;
     --theme-link: 85 123 118;
     --theme-accent: 203 41 65;
     --theme-accent-2: 17 17 17;
@@ -16,8 +16,8 @@
 
   :root.dark {
     color-scheme: dark;
-    --theme-bgColor: 28 30 32;
-    --theme-textColor: 212 129 170;
+    --theme-bg: 28 30 32;
+    --theme-text: 212 129 170;
     --theme-link: 199 200 203;
     --theme-accent: 41 188 136;
     --theme-accent-2: 237 237 237;

@@ -20,11 +20,11 @@
   "BASE_PATH": "",
   "THEME": {
     "colors": {
-      "bgColor": {
+      "bg": {
         "light": "249 249 249",
         "dark": "28 30 32"
       },
-      "textColor": {
+      "text": {
         "light": "34 39 42",
         "dark": "212 129 170"
       },
