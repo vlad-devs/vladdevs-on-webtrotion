@@ -48,11 +48,6 @@ jobs:
           # echo "DATABASE_ID = $DATABASE_ID"
           echo "NOTION_API_SECRET = $NOTION_API_SECRET"
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: ${{ env.BUILD_PATH }}/dist
-
       - name: Build with Astro
         run: |
           npm astro build
@@ -61,6 +56,11 @@ jobs:
           # --site steps.pages.outputs.origin" \
           # --base steps.pages.outputs.base_path"
         # working-directory: [your working directory, if not root]
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ${{ env.BUILD_PATH }}/dist
 
 
 
