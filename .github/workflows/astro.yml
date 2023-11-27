@@ -46,10 +46,10 @@ jobs:
       - name: Set and log environment secrets and variables
         run: |
           # echo "DATABASE_ID = $DATABASE_ID"
-          echo "NOTION_API_SECRET = $NOTION_API_SECRET"
-          echo "GITHUB_PAGES = true"
-          echo "SITE = ${{ steps.pages.outputs.origin }}"
-          echo "BASE = ${{ steps.pages.outputs.base_path }}"
+          export "NOTION_API_SECRET = $NOTION_API_SECRET"
+          export "GITHUB_PAGES = true"
+          export "SITE = ${{ steps.pages.outputs.origin }}"
+          export "BASE = ${{ steps.pages.outputs.base_path }}"
 
       - name: Build with Astro
         run: |
