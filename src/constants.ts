@@ -26,7 +26,7 @@ export const HEADING_BLOCKS = key_value_from_json["HEADING_BLOCKS"] || ["heading
 
 export const PUBLISH_ON_FILTER = key_value_from_json["PUBLISH_ON_FILTER"] || "";
 
-export const FULL_PREVIEW_COLLECTIONS = key_value_from_json["FULL_PREVIEW_COLLECTIONS"] || ["Stream"];
+export const FULL_PREVIEW_COLLECTIONS = key_value_from_json["FULL_PREVIEW_COLLECTIONS"] || [];
 
 export const HIDE_UNDERSCORE_SLUGS_IN_LISTS = key_value_from_json["HIDE_UNDERSCORE_SLUGS_IN_LISTS"] || false;
 

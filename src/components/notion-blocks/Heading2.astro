@@ -18,24 +18,27 @@ const id = buildHeadingId(block.Heading2);
 	block.Heading2.IsToggleable ? (
 		<details class="toggle mb-0 mt-8">
 			<summary class="flex cursor-pointer list-none gap-2">
-				<svg
-					class="rotate-svg mt-1 flex-shrink-0 transition-all duration-300"
-					fill="none"
-					height="20"
-					width="20"
-					stroke="currentColor"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					viewBox="0 0 24 24"
-				>
-					<polyline points="12 8 18 14 12 20" />
-				</svg>
+				<div>
+					<svg
+						class="rotate-svg mt-1 flex-shrink-0 transition-all duration-300"
+						fill="none"
+						height="20"
+						width="20"
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						viewBox="0 0 24 24"
+					>
+						<polyline points="12 8 18 14 12 20" />
+					</svg>
+				</div>
 				<a
 					class="inline"
 					href={`#${id}`}
 					id={id}
-					onclick="var fullUrl = `${window.location.origin}${window.location.pathname}#${id}`; navigator.clipboard.writeText(fullUrl);"
+          onclick="var fullUrl = `${window.location.origin}${window.location.pathname}#${this.id}`; navigator.clipboard.writeText(fullUrl); this.closest('details').open = !this.closest('details').open;"
+
 				>
 					<h3 class="toggle-h3 mb-4 mt-8 inline text-xl">
 						{block.Heading2.RichTexts.map((richText: interfaces.RichText) => (
@@ -83,7 +86,7 @@ const id = buildHeadingId(block.Heading2);
 	h3.toggle-h3::before {
 		margin-left: -2.5rem;
 	}
-	details[open] > summary > div > .flex-shrink-0.rotate-svg {
+	details[open] > summary > .flex-shrink-0.rotate-svg {
 		transform: rotate(-90deg);
 	}
 </style>

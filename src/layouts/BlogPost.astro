@@ -59,9 +59,8 @@ const articleDate = new Date(post.Date).toISOString();
 <BaseLayout
 	meta={{ title: post.Title, description: post.Excerpt, articleDate, ogImage: socialImage }}
 >
-	<div class="gap-x-10 lg:flex lg:items-start">
-		{!!headings.length && <TOC headings={headings} />}
-		<article class="flex-grow break-words" data-pagefind-body>
+	<div class="sm:grid sm:grid-cols-4 sm:items-start sm:gap-x-10">
+		<article class="col-span-3 break-words" data-pagefind-body>
 			<div id="blog-hero"><BlogHero post={post} /></div>
 			<!-- <div id="blog-hero"><BlogHero content={post} /></div> -->
 			<div class="mt-12">
@@ -72,6 +71,7 @@ const articleDate = new Date(post.Date).toISOString();
 				<PostComments />
 			</div>
 		</article>
+		{!!headings.length && <TOC headings={headings} />}
 	</div>
 	<button
 		id="to-top-btn"
