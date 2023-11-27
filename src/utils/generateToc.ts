@@ -72,6 +72,7 @@ function cleanHeading(heading: Block): Heading {
 }
 
 export function buildHeadings(blocks: Block[]) {
+  console.log(blocks);
   return blocks.filter((block) => HEADING_BLOCKS.includes(block.Type)).map(cleanHeading);
 }
 

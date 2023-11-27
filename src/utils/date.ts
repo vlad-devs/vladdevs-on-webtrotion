@@ -49,4 +49,15 @@ export function getFormattedDateWithTime(date: string | number | Date) {
   return formattedDate;
 }
 
+export function areDifferentDates(date1: string | number | Date, date2: string | number | Date) {
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+
+  // Compare only the date parts (year, month, and day)
+  return d1.getFullYear() !== d2.getFullYear() ||
+    d1.getMonth() !== d2.getMonth() ||
+    d1.getDate() !== d2.getDate();
+}
+
+
 

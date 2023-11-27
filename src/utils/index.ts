@@ -7,7 +7,7 @@ import slugify from '@sindresorhus/slugify';
 // import { siteInfo } from "./site.config";
 
 
-export { getFormattedDate, getFormattedDateWithTime } from "./date";
+export { getFormattedDate, getFormattedDateWithTime, areDifferentDates } from "./date";
 export { elementHasClass, toggleClass, rootHasDarkClass } from "./domElement";
 // export { getAllPosts, sortMDByDate, getUniqueTags, getUniqueTagsWithCount } from "./post";
 // export { generateToc } from "./generateToc";

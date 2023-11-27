@@ -5,6 +5,7 @@ import FormattedDate from "../FormattedDate.astro";
 //ADDED
 import type { Post } from "src/lib/interfaces";
 import { convertToTailwindColor, convertToTailwindColorForBorder } from "@/lib/style-helpers";
+import { areDifferentDates } from "@/utils/date";
 
 interface Props {
 	// content: CollectionEntry<"post">;
@@ -23,8 +24,8 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 	month: "long",
 };
 ---
- <!-- //NOTE: Removed featued image from the top of page -->
-<!-- {
+
+<!-- //NOTE: Removed featued image from the top of page --><!-- {
 	post.FeaturedImage && (
 		<div class="aspect-h-9 aspect-w-16 mb-6">
 			<Image
@@ -56,10 +57,14 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 	} -->
 
 	{
-		post.Date && (
+		post.Date && post.LastUpdatedDate && areDifferentDates(post.Date, post.LastUpdatedDate) && (
 			<span class="rounded-lg bg-quote/10 p-1 text-quote">
 				Last Updated:
-				<FormattedDate class="ms-1" date={new Date(post.LastUpdatedDate)} dateTimeOptions={dateTimeOptions} />
+				<FormattedDate
+					class="ms-1"
+					date={new Date(post.LastUpdatedDate)}
+					dateTimeOptions={dateTimeOptions}
+				/>
 			</span>
 		)
 	}
@@ -87,14 +92,15 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 			{post.Tags.map((tag, i) => (
 				<>
 					<a
-            class={`rounded-lg p-1 border inline-block ${convertToTailwindColor(tag.color+"-background")} ${convertToTailwindColorForBorder(tag.color+"-background")}`}
+						class={`inline-block rounded-lg border p-1 ${convertToTailwindColor(
+							tag.color + "-background",
+						)} ${convertToTailwindColorForBorder(tag.color + "-background")}`}
 						aria-label={`View more blogs with the tag ${tag.name}`}
 						href={`/tags/${tag.name}/`}
 						data-pagefind-filter="tag"
 					>
 						{tag.name}
-					</a>
-					{" "}
+					</a>{" "}
 				</>
 			))}
 		</div>
