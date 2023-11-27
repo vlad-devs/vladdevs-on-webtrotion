@@ -64,16 +64,17 @@ export const textToAstroIcon = (text: string) => {
     "copy-code": "mdi:content-copy",
     "copied-to-clipboard": "mdi:clipboard-check",
     "rss": "mdi:rss",
-    "dblp": "academicons:dblp",
+    "dblp": "simple-icons:dblp",
     "email": "mdi:email",
     "github": "mdi:github",
-    "googlescholar": "academicons:google-scholar",
+    "googlescholar": "simple-icons:google-scholar",
+    "linkedin": "mdi:linkedin",
     "facebook": "mdi:facebook",
     "twitter": "mdi:twitter",
-    "threads": "simple-icons:threads",
+    // "threads": "simple-icons:threads",
     "instagram": "mdi:instagram",
     "mastodon": "mdi:mastodon",
-    "semanticscholar": "academicons:semantic-scholar"
+    "semanticscholar": "simple-icons:semantic-scholar"
 
   }
   if (text in textIconMap) {

@@ -2,7 +2,6 @@
 import { ENABLE_LIGHTBOX } from "../../../constants.ts";
 import * as interfaces from "../../../lib/interfaces.ts";
 import { filePath } from "../../../lib/blog-helpers";
-
 import Caption from "../Caption.astro";
 
 export interface Props {
@@ -32,7 +31,7 @@ if (block.NImage?.External) {
 						<img src={image} alt="image block" />
 					)}
 				</div>
-				<Caption richTexts={block.NImage.Caption}  block={block} />
+				<Caption richTexts={block.NImage.Caption} block={block} />
 			</div>
 		)
 	}
