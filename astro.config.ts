@@ -24,7 +24,7 @@ const getSite = function () {
     return new URL(BASE_PATH, `https://${new URL(process.env.CF_PAGES_URL).host.split('.').slice(1).join('.')}`).toString();
   }
   if (process.env.GITHUB_PAGES) {
-    return new URL(process.env.BASE || BASE_PATH, `https://${CUSTOM_DOMAIN}`).toString();
+    return new URL(process.env.BASE || BASE_PATH, process.env.SITE).toString();
   }
   return new URL(BASE_PATH, 'http://localhost:4321').toString();
 };
