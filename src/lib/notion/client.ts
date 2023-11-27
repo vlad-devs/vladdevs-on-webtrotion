@@ -4,12 +4,14 @@ import type { AxiosResponse } from "axios";
 import sharp from "sharp";
 import retry from "async-retry";
 import ExifTransformer from "exif-be-gone";
+import pngToIco from "png-to-ico";
 import {
   NOTION_API_SECRET,
   DATABASE_ID,
   NUMBER_OF_POSTS_PER_PAGE,
   REQUEST_TIMEOUT_MS,
-  MENU_PAGES_COLLECTION
+  MENU_PAGES_COLLECTION,
+  OPTIMIZE_IMAGES
 } from "../../constants";
 import type * as responses from "./responses";
 import type * as requestParams from "./request-params";
@@ -446,7 +448,8 @@ export async function getAllTagsWithCounts(): Promise<(SelectProperty & { count:
   return tagsWithCounts;
 }
 
-export async function downloadFile(url: URL, optimize_img = true) {
+export async function downloadFile(url: URL, optimize_img: boolean = true, isFavicon: boolean = false) {
+  optimize_img = optimize_img ? OPTIMIZE_IMAGES : optimize_img;
   let res!: AxiosResponse;
   try {
     res = await axios({
@@ -477,6 +480,7 @@ export async function downloadFile(url: URL, optimize_img = true) {
 
   const filename = decodeURIComponent(url.pathname.split("/").slice(-1)[0]);
   const filepath = `${dir}/${filename}`;
+  // const faviconPath = BASE_DIR + "/favicon.ico";
 
   let stream = res.data;
   if (res.headers["content-type"] === "image/jpeg") {
@@ -484,6 +488,28 @@ export async function downloadFile(url: URL, optimize_img = true) {
   }
 
   const isImage = res.headers["content-type"]?.startsWith("image/");
+
+  const processFavicon = async (sourcePath: string) => {
+    const faviconPngPath = './public/favicon.png';
+    const faviconIcoPath = './public/favicon.ico';
+
+    try {
+      // Save the original image as favicon.png
+      await sharp(sourcePath)
+        .toFile(faviconPngPath);
+
+      // Convert favicon.png to favicon.ico
+      const icoBuffer = await pngToIco(faviconPngPath);
+      fs.writeFileSync(faviconIcoPath, icoBuffer);
+
+      // Delete the temporary favicon.png file
+      fs.unlinkSync(faviconPngPath);
+    } catch (err) {
+      console.error('Error processing favicon:', err);
+    }
+  };
+
+
   if (isImage && optimize_img) {
     // Process and write only the optimized WebP image
     // const webpPath = `${dir}/${filename.split('.')[0]}.webp`;
@@ -498,53 +524,22 @@ export async function downloadFile(url: URL, optimize_img = true) {
   } else {
     // Original behavior for non-image files or when not optimizing
     const writeStream = fs.createWriteStream(filepath);
+    stream.on('error', function (err) {
+      console.error('Error reading stream:', err);
+    });
+    writeStream.on('error', function (err) {
+      console.error('Error writing file:', err);
+    });
     stream.pipe(new ExifTransformer()).pipe(writeStream);
+
+    // After the file is written, check if favicon processing is needed
+    writeStream.on('finish', () => {
+      if (isFavicon) {
+        processFavicon(filepath);
+      }
+    });
   }
 }
-
-// export async function downloadFile(url: URL, optimize: boolean = true) {
-//   let res!: AxiosResponse;
-//   try {
-//     res = await axios({
-//       method: "get",
-//       url: url.toString(),
-//       timeout: REQUEST_TIMEOUT_MS,
-//       responseType: "stream",
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return Promise.resolve();
-//   }
-
-//   if (!res || res.status != 200) {
-//     console.log(res);
-//     return Promise.resolve();
-//   }
-
-//   const BASE_DIR = "./public/notion/";
-//   // const BASE_DIR = "./src/notion-assets/";
-//   if (!fs.existsSync(BASE_DIR)) {
-//     fs.mkdirSync(BASE_DIR);
-//   }
-
-//   const dir = BASE_DIR + url.pathname.split("/").slice(-2)[0];
-//   if (!fs.existsSync(dir)) {
-//     fs.mkdirSync(dir);
-//   }
-
-//   const filename = decodeURIComponent(url.pathname.split("/").slice(-1)[0]);
-//   const filepath = `${dir}/${filename}`;
-
-//   const writeStream = fs.createWriteStream(filepath);
-//   const rotate = sharp().rotate();
-
-//   let stream = res.data;
-
-//   if (res.headers["content-type"] === "image/jpeg") {
-//     stream = stream.pipe(rotate);
-//   }
-//   stream.pipe(new ExifTransformer()).pipe(writeStream);
-// }
 
 export async function getDatabase(): Promise<Database> {
   if (dbCache !== null) {

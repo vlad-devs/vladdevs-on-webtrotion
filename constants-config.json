@@ -4,6 +4,18 @@
   "PUBLIC_GA_TRACKING_ID": "",
   "WEBMENTION_API_KEY": "",
   "WEBMENTION_LINK": "",
+  "SOCIALS": {
+    "email": "mailto:nerdymomocat@gmail.com",
+    "github": "",
+    "googlescholar": "",
+    "semanticscholar": "",
+    "dblp": "",
+    "facebook": "",
+    "twitter": "",
+    "threads": "",
+    "instagram": "",
+    "mastodon": ""
+  },
   "CUSTOM_DOMAIN": "",
   "BASE_PATH": "",
   "NUMBER_OF_POSTS_PER_PAGE": 10,
@@ -25,16 +37,5 @@
     "COLUMNS": 2,
     "EXCERPT": true
   },
-  "SOCIALS": {
-    "email": "mailto:nerdymomocat@gmail.com",
-    "github": "",
-    "googlescholar": "",
-    "semanticscholar": "",
-    "dblp": "",
-    "facebook": "",
-    "twitter": "",
-    "threads": "",
-    "instagram": "",
-    "mastodon": ""
-  }
+  "OPTIMIZE_IMAGES": true
 }

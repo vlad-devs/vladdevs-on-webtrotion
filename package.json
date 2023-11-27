@@ -35,6 +35,7 @@
     "metascraper-title": "^5.37.1",
     "metascraper-url": "^5.38.0",
     "node-fetch": "^3.3.2",
+    "png-to-ico": "^2.1.8",
     "prismjs": "^1.29.0",
     "satori-html": "^0.3.2"
   },

@@ -36,3 +36,5 @@ export const OG_SETUP = key_value_from_json["OG_SETUP"] || {
   "COLUMNS": 2,
   "EXCERPT": true
 };
+
+export const OPTIMIZE_IMAGES = key_value_from_json["OPTIMIZE_IMAGES"] == null ? true : key_value_from_json["OPTIMIZE_IMAGES"];

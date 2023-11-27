@@ -22,7 +22,7 @@ export default (): AstroIntegration => ({
         return Promise.resolve()
       }
 
-      return downloadFile(url, false)
+      return downloadFile(url, false, true)
     },
   },
 })
