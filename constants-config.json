@@ -37,5 +37,38 @@
     "COLUMNS": 2,
     "EXCERPT": true
   },
-  "OPTIMIZE_IMAGES": true
+  "OPTIMIZE_IMAGES": true,
+  "THEME": {
+    "colors": {
+      "bgColor": {
+        "light": "249 249 249",
+        "dark": "28 30 32"
+      },
+      "textColor": {
+        "light": "34 39 42",
+        "dark": "212 129 170"
+      },
+      "link": {
+        "light": "85 123 118",
+        "dark": "199 200 203"
+      },
+      "accent": {
+        "light": "203 41 65",
+        "dark": "41 188 136"
+      },
+      "accent-2": {
+        "light": "17 17 17",
+        "dark": "237 237 237"
+      },
+      "quote": {
+        "light": "203 41 65",
+        "dark": "205 254 183"
+      }
+    },
+    "fontFamily": {
+      "sans": [],
+      "serif": [],
+      "mono": []
+    }
+  }
 }

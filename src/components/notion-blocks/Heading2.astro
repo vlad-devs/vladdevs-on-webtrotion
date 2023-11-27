@@ -70,7 +70,7 @@ const id = buildHeadingId(block.Heading2);
 	h3::before {
 		content: "#";
 		position: absolute;
-		color: var(--accent);
+		color: rgb(var(--theme-accent));
 		margin-left: -1.5rem;
 		display: inline-block;
 		opacity: 0; /* Start with invisible content */
@@ -80,9 +80,9 @@ const id = buildHeadingId(block.Heading2);
 	h3:hover::before {
 		opacity: 1; /* Make the content visible on hover */
 	}
-  h3.toggle-h3::before {
-  margin-left: -2.5rem;
-}
+	h3.toggle-h3::before {
+		margin-left: -2.5rem;
+	}
 	details[open] > summary > div > .flex-shrink-0.rotate-svg {
 		transform: rotate(-90deg);
 	}

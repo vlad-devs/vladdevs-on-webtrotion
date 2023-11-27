@@ -10,36 +10,28 @@ import prefetch from "@astrojs/prefetch";
 // import { astroImageTools } from "astro-imagetools";
 
 import { CUSTOM_DOMAIN, BASE_PATH, HIDE_UNDERSCORE_SLUGS_IN_LISTS } from "./src/constants";
-
 const getSite = function () {
   if (CUSTOM_DOMAIN) {
     return new URL(BASE_PATH, `https://${CUSTOM_DOMAIN}`).toString();
   }
-
   if (process.env.VERCEL && process.env.VERCEL_URL) {
     return new URL(BASE_PATH, `https://${process.env.VERCEL_URL}`).toString();
   }
-
   if (process.env.CF_PAGES) {
     if (process.env.CF_PAGES_BRANCH !== 'main') {
       return new URL(BASE_PATH, process.env.CF_PAGES_URL).toString();
     }
-
-    return new URL(
-      BASE_PATH,
-      `https://${new URL(process.env.CF_PAGES_URL).host
-        .split('.')
-        .slice(1)
-        .join('.')}`
-    ).toString();
+    return new URL(BASE_PATH, `https://${new URL(process.env.CF_PAGES_URL).host.split('.').slice(1).join('.')}`).toString();
   }
-
   return new URL(BASE_PATH, 'http://localhost:4321').toString();
 };
 import CoverImageDownloader from './src/integrations/cover-image-downloader';
 import CustomIconDownloader from './src/integrations/custom-icon-downloader';
 import FeaturedImageDownloader from './src/integrations/featured-image-downloader';
 import PublicNotionCopier from './src/integrations/public-notion-copier';
+import CSSWriter from './src/integrations/theme-constants-to-css';
+
+import robotsTxt from "astro-robots-txt";
 
 // https://astro.build/config
 export default defineConfig({
@@ -53,21 +45,17 @@ export default defineConfig({
     tailwind({
       applyBaseStyles: false
     }), sitemap({
-      filter: (page) => {
+      filter: page => {
         console.log(page);
         if (page.includes("/_") && HIDE_UNDERSCORE_SLUGS_IN_LISTS) {
           console.log('Excluding page from sitemap:', page);
           return false;
         }
         return true;
-      },
+      }
     }), prefetch(),
     // astroImageTools,
-    CoverImageDownloader(),
-    CustomIconDownloader(),
-    FeaturedImageDownloader(),
-    PublicNotionCopier()
-  ],
+    CoverImageDownloader(), CustomIconDownloader(), FeaturedImageDownloader(), PublicNotionCopier(), CSSWriter(), robotsTxt()],
   image: {
     domains: ["webmention.io"]
   },

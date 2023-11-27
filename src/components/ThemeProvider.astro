@@ -1,4 +1,4 @@
-{/* Inlined to avoid FOUC. */}
+{/* Inlined to avoid (Flash of Unstyled Content). */}
 <script is:inline>
 	function getUserPref() {
 		const storedTheme = typeof localStorage !== "undefined" && localStorage.getItem("theme");
@@ -28,7 +28,7 @@
 		document.documentElement.classList.toggle("dark", newTheme === "dark");
 		const bgColour = getComputedStyle(document.body).getPropertyValue("--theme-bg");
 
-		colorThemeMetaTag.setAttribute("content", `hsl(${bgColour})`);
+		colorThemeMetaTag.setAttribute("content", `rgb(${bgColour})`);
 		if (typeof localStorage !== "undefined") {
 			localStorage.setItem("theme", newTheme);
 		}
