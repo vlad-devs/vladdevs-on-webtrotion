@@ -6,39 +6,6 @@ const socials_links = key_value_from_json["SOCIALS"];
 import type { SocialLink } from "@/types";
 import { textToAstroIcon } from "@/lib/style-helpers";
 
-/**
-	Uses https://github.com/natemoo-re/astro-icon#readme
-	Find icons @ https://icones.js.org/
-*/
-// const socialLinks: Array<{
-// 	name: string;
-// 	friendlyName: string;
-// 	link: string;
-// 	isWebmention?: boolean;
-// }> = [
-// 	{
-// 		name: "mdi:github",
-// 		friendlyName: "Github",
-// 		link: "https://github.com/chrismwilliams/astro-cactus",
-// 	},
-// 	{
-// 		name: "mdi:mastodon",
-// 		friendlyName: "Mastodon",
-// 		link: "#",
-// 	},
-// 	{
-// 		name: "mdi:linkedin",
-// 		friendlyName: "LinkedIn",
-// 		link: "#",
-// 	},
-// 	{
-// 		name: "mdi:email",
-// 		friendlyName: "email",
-// 		link: "mailto:astro-cactus@chriswilliams.dev",
-// 		isWebmention: true,
-// 	},
-// ];
-
 const mapSocialLinks = (socialLinksObject: { [key: string]: string }): SocialLink[] => {
 	return Object.entries(socialLinksObject)
 		.map(([key, value]): SocialLink => {
