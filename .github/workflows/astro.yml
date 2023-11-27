@@ -46,13 +46,22 @@ jobs:
       - name: Set and log environment secrets and variables
         run: |
           # echo "DATABASE_ID = $DATABASE_ID"
-          export "NOTION_API_SECRET = $NOTION_API_SECRET"
-          export "GITHUB_PAGES = true"
-          export "SITE = ${{ steps.pages.outputs.origin }}"
-          export "BASE = ${{ steps.pages.outputs.base_path }}"
+          echo "NOTION_API_SECRET = $NOTION_API_SECRET"
+          echo "GITHUB_PAGES = true"
+          echo "SITE = ${{ steps.pages.outputs.origin }}"
+          echo "BASE = ${{ steps.pages.outputs.base_path }}"
 
       - name: Build with Astro
+        env:
+          NOTION_API_SECRET: ${{ secrets.NOTION_API_SECRET }}
+          GITHUB_PAGES: true
+          SITE: ${{ steps.pages.outputs.origin }}
+          BASE: ${{ steps.pages.outputs.base_path }}
         run: |
+          echo "NOTION_API_SECRET = $NOTION_API_SECRET"
+          echo "GITHUB_PAGES = $GITHUB_PAGES"
+          echo "SITE = $SITE"
+          echo "BASE = $BASE"
           npx --no-install astro build
           # or if you prefer yarn, use: yarn build
           # --site and --base flags can be included if needed for Astro
