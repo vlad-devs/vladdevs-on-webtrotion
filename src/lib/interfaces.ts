@@ -144,6 +144,7 @@ export interface File {
 export interface FileObject {
   Type: string;
   Url: string;
+  OptimizedUrl?: string;
   ExpiryTime?: string;
   Size?: number;
 }

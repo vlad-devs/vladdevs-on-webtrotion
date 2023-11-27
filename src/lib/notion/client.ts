@@ -446,7 +446,7 @@ export async function getAllTagsWithCounts(): Promise<(SelectProperty & { count:
   return tagsWithCounts;
 }
 
-export async function downloadFile(url: URL) {
+export async function downloadFile(url: URL, optimize_img = true) {
   let res!: AxiosResponse;
   try {
     res = await axios({
@@ -466,7 +466,6 @@ export async function downloadFile(url: URL) {
   }
 
   const BASE_DIR = "./public/notion/";
-  // const BASE_DIR = "./src/notion-assets/";
   if (!fs.existsSync(BASE_DIR)) {
     fs.mkdirSync(BASE_DIR);
   }
@@ -479,16 +478,73 @@ export async function downloadFile(url: URL) {
   const filename = decodeURIComponent(url.pathname.split("/").slice(-1)[0]);
   const filepath = `${dir}/${filename}`;
 
-  const writeStream = fs.createWriteStream(filepath);
-  const rotate = sharp().rotate();
-
   let stream = res.data;
-
   if (res.headers["content-type"] === "image/jpeg") {
-    stream = stream.pipe(rotate);
+    stream = stream.pipe(sharp().rotate());
   }
-  stream.pipe(new ExifTransformer()).pipe(writeStream);
+
+  const isImage = res.headers["content-type"]?.startsWith("image/");
+  if (isImage && optimize_img) {
+    // Process and write only the optimized WebP image
+    // const webpPath = `${dir}/${filename.split('.')[0]}.webp`;
+    const webpPath = `${dir}/${filename.substring(0, filename.lastIndexOf('.'))}.webp`
+    stream.pipe(sharp()
+      // .resize({ width: 1024 }) // Adjust the size as needed for "medium"
+      .webp({ quality: 80 })) // Adjust quality as needed
+      .toFile(webpPath)
+      .catch(err => {
+        console.error('Error processing image:', err);
+      });
+  } else {
+    // Original behavior for non-image files or when not optimizing
+    const writeStream = fs.createWriteStream(filepath);
+    stream.pipe(new ExifTransformer()).pipe(writeStream);
+  }
 }
+
+// export async function downloadFile(url: URL, optimize: boolean = true) {
+//   let res!: AxiosResponse;
+//   try {
+//     res = await axios({
+//       method: "get",
+//       url: url.toString(),
+//       timeout: REQUEST_TIMEOUT_MS,
+//       responseType: "stream",
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return Promise.resolve();
+//   }
+
+//   if (!res || res.status != 200) {
+//     console.log(res);
+//     return Promise.resolve();
+//   }
+
+//   const BASE_DIR = "./public/notion/";
+//   // const BASE_DIR = "./src/notion-assets/";
+//   if (!fs.existsSync(BASE_DIR)) {
+//     fs.mkdirSync(BASE_DIR);
+//   }
+
+//   const dir = BASE_DIR + url.pathname.split("/").slice(-2)[0];
+//   if (!fs.existsSync(dir)) {
+//     fs.mkdirSync(dir);
+//   }
+
+//   const filename = decodeURIComponent(url.pathname.split("/").slice(-1)[0]);
+//   const filepath = `${dir}/${filename}`;
+
+//   const writeStream = fs.createWriteStream(filepath);
+//   const rotate = sharp().rotate();
+
+//   let stream = res.data;
+
+//   if (res.headers["content-type"] === "image/jpeg") {
+//     stream = stream.pipe(rotate);
+//   }
+//   stream.pipe(new ExifTransformer()).pipe(writeStream);
+// }
 
 export async function getDatabase(): Promise<Database> {
   if (dbCache !== null) {
@@ -666,6 +722,7 @@ function _buildBlock(blockObject: responses.BlockObject): Block {
           image.File = {
             Type: blockObject.image.type,
             Url: blockObject.image.file.url,
+            OptimizedUrl: blockObject.image.file.url.substring(0, blockObject.image.file.url.lastIndexOf('.')) + ".webp",
             ExpiryTime: blockObject.image.file.expiry_time,
           };
         }
