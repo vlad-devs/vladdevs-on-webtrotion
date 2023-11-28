@@ -1,5 +1,6 @@
 ---
 import PageLayout from "@/layouts/Base";
+import { getNavLink } from "@/lib/blog-helpers";
 // import { getAllPosts, getUniqueTagsWithCount } from "@/utils";
 import { getAllTagsWithCounts } from "@/lib/notion/client";
 
@@ -23,7 +24,7 @@ const meta = {
 				<li class="flex items-center gap-x-2">
 					<a
 						class="cactus-link inline-block"
-						href={`/tags/${tag.name}/`}
+						href={getNavLink("/tags/" + tag.name + "/")}
 						title={`View posts with the tag: ${tag.name}`}
 						rel="prefetch"
 					>

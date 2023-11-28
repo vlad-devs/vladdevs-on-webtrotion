@@ -6,6 +6,7 @@ import FormattedDate from "../FormattedDate.astro";
 import type { Post } from "src/lib/interfaces";
 import { convertToTailwindColor, convertToTailwindColorForBorder } from "@/lib/style-helpers";
 import { areDifferentDates } from "@/utils/date";
+import { getNavLink } from "@/lib/blog-helpers";
 
 interface Props {
 	// content: CollectionEntry<"post">;
@@ -96,7 +97,7 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 							tag.color + "-background",
 						)} ${convertToTailwindColorForBorder(tag.color + "-background")}`}
 						aria-label={`View more blogs with the tag ${tag.name}`}
-						href={`/tags/${tag.name}/`}
+						href={getNavLink("/tags/" + tag.name + "/")}
 						data-pagefind-filter="tag"
 					>
 						{tag.name}

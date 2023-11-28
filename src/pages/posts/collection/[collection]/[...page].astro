@@ -11,6 +11,7 @@ import { getCollections } from "@/utils";
 import slugify from "@sindresorhus/slugify";
 import { convertToTailwindColor, convertToTailwindColorForBorder } from "@/lib/style-helpers";
 import { FULL_PREVIEW_COLLECTIONS, HIDE_UNDERSCORE_SLUGS_IN_LISTS } from "@/constants";
+import { getNavLink } from "@/lib/blog-helpers";
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const posts = await getAllPosts();
@@ -119,7 +120,7 @@ const paginationProps = {
 									class={`flex items-center justify-center rounded-lg border p-1 ${convertToTailwindColor(
 										tag.color + "-background",
 									)} ${convertToTailwindColorForBorder(tag.color + "-background")}`}
-									href={`/tags/${tag.name}/`}
+									href={getNavLink("/tags/" + tag.name + "/")}
 									aria-label={`View all posts with the tag: ${tag.name}`}
 								>
 									{tag.name}
@@ -128,7 +129,11 @@ const paginationProps = {
 						))}
 					</ul>
 					<span class="mt-4 block sm:text-end">
-						<a class="sm:hover:text-accent" href="/tags/" aria-label="View all blog categories">
+						<a
+							class="sm:hover:text-accent"
+							href={getNavLink("/tags/")}
+							aria-label="View all blog categories"
+						>
 							View all →
 						</a>
 					</span>

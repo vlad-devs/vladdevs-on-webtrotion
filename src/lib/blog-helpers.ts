@@ -1,15 +1,16 @@
 import fetch from "node-fetch";
 import { REQUEST_TIMEOUT_MS, HOME_PAGE_SLUG } from "@/constants";
 import type { Block, Heading1, Heading2, Heading3, RichText, Column } from "./interfaces";
-import { pathJoin } from "@/utils";
 import slugify from '@sindresorhus/slugify';
+import path from 'path';
+
 
 const BASE_PATH = import.meta.env.BASE_URL;
 
 export const filePath = (url: URL): string => {
   const [dir, filename] = url.pathname.split("/").slice(-2);
-  return pathJoin(BASE_PATH, `/notion/${dir}/${filename}`);
-  // return pathJoin(BASE_PATH, `./src/notion-assets/${dir}/${filename}`);
+  return path.join(BASE_PATH, `/notion/${dir}/${filename}`);
+  // return path.join(BASE_PATH, `./src/notion-assets/${dir}/${filename}`);
 };
 
 export const extractTargetBlocks = (blockType: string, blocks: Block[]): Block[] => {
@@ -91,34 +92,33 @@ export const buildURLToHTMLMap = async (urls: URL[]): Promise<{ [key: string]: s
   }, {});
 };
 
-export const getStaticFilePath = (path: string): string => {
-  return pathJoin(BASE_PATH, path);
+export const getStaticFilePath = (pathsup: string): string => {
+  return path.join(BASE_PATH, pathsup);
 };
 
 export const getNavLink = (nav: string) => {
-  if ((!nav || nav === "/") && BASE_PATH) {
-    return pathJoin(BASE_PATH, "") + "/";
+  if ((!nav) && BASE_PATH) {
+    return path.join(BASE_PATH, "") + "/";
   }
-
-  return pathJoin(BASE_PATH, nav);
+  return path.join(BASE_PATH, nav);
 };
 
 export const getPostLink = (slug: string, isRoot: boolean = false) => {
-  const linkedPath = isRoot ? (slug === HOME_PAGE_SLUG ? pathJoin(BASE_PATH, `/`) : pathJoin(BASE_PATH, `/${slug}`)) : pathJoin(BASE_PATH, `/posts/${slug}`);
+  const linkedPath = isRoot ? (slug === HOME_PAGE_SLUG ? path.join(BASE_PATH, `/`) : path.join(BASE_PATH, `/${slug}`)) : path.join(BASE_PATH, `/posts/${slug}`);
   return linkedPath;
 };
 
 export const getTagLink = (tag: string) => {
-  return pathJoin(BASE_PATH, `/posts/tag/${encodeURIComponent(tag)}`);
+  return path.join(BASE_PATH, `/posts/tag/${encodeURIComponent(tag)}`);
 };
 
 export const getPageLink = (page: number, tag: string) => {
   if (page === 1) {
-    return tag ? getTagLink(tag) : pathJoin(BASE_PATH, "/");
+    return tag ? getTagLink(tag) : path.join(BASE_PATH, "/");
   }
   return tag
-    ? pathJoin(BASE_PATH, `/posts/tag/${encodeURIComponent(tag)}/page/${page.toString()}`)
-    : pathJoin(BASE_PATH, `/posts/page/${page.toString()}`);
+    ? path.join(BASE_PATH, `/posts/tag/${encodeURIComponent(tag)}/page/${page.toString()}`)
+    : path.join(BASE_PATH, `/posts/page/${page.toString()}`);
 };
 
 export const getDateStr = (date: string) => {

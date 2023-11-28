@@ -4,6 +4,7 @@ import { getDatabase, getPages } from "@/lib/notion/client";
 import type { Block, BlockTypes } from "@/lib/interfaces";
 import { MENU_PAGES_COLLECTION, HOME_PAGE_SLUG } from "@/constants";
 import slugify from '@sindresorhus/slugify';
+import { getNavLink } from "@/lib/blog-helpers";
 // import { siteInfo } from "./site.config";
 
 
@@ -15,19 +16,6 @@ export { generateToc, buildHeadings } from "./generateToc";
 export type { TocItem } from "./generateToc";
 export { getWebmentionsForUrl } from "./webmentions";
 // export { siteInfo } from "./site.config";
-
-//utils.ts from otoyo's personal blog in lib has just one export of pathjoin that i moved here
-
-export const pathJoin = (path: string, subPath: string) => {
-  return (
-    '/' +
-    path
-      .split('/')
-      .concat(subPath.split('/'))
-      .filter((p) => p)
-      .join('/')
-  )
-}
 
 //NOTE ADDED FROM HERE ON
 
@@ -49,7 +37,7 @@ export async function getMenu(): Promise<
 
   const collectionLinks = collections.map((name) => ({
     title: name,
-    path: `/posts/collection/${slugify(name)}`,
+    path: getNavLink("/posts/collection/" + slugify(name)),
   }));
 
   const pageLinks = pages
@@ -62,7 +50,7 @@ export async function getMenu(): Promise<
     .sort((a, b) => a.Rank - b.Rank)
     .map((page) => ({
       title: page.Title,
-      path: page.Slug === HOME_PAGE_SLUG ? "/" : `/${page.Slug}`,
+      path: getNavLink(page.Slug === HOME_PAGE_SLUG ? "/" : "/" + page.Slug),
     }));
 
   //console.log(pageLinks);

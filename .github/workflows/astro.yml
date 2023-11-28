@@ -43,15 +43,7 @@ jobs:
         run: npm ci
         working-directory: ${{ env.BUILD_PATH }}
 
-      - name: Set and log environment secrets and variables
-        run: |
-          # echo "DATABASE_ID = $DATABASE_ID"
-          echo "NOTION_API_SECRET = $NOTION_API_SECRET"
-          echo "GITHUB_PAGES = true"
-          echo "SITE = ${{ steps.pages.outputs.origin }}"
-          echo "BASE = ${{ steps.pages.outputs.base_path }}"
-
-      - name: Build with Astro
+      - name: Set and log environment secrets and variables and then Build with Astro
         env:
           NOTION_API_SECRET: ${{ secrets.NOTION_API_SECRET }}
           GITHUB_PAGES: true
