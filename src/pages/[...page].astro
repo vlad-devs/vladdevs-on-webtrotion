@@ -1,6 +1,7 @@
 ---
 import PageLayout from "../layouts/Base.astro";
 import PostPreview from "../components/blog/PostPreview.astro";
+import WebMentions from "@/components/blog/webmentions/index";
 import {
 	downloadFile,
 	getAllBlocksByBlockId,
@@ -15,6 +16,7 @@ import type { Post } from "../lib/interfaces";
 // import { siteConfig } from "@/site-config";
 // import { siteInfo } from "@/utils";
 import { siteInfo } from "@/siteInfo";
+import PostComments from "@/components/blog/PostComments.astro";
 
 export async function getStaticPaths() {
 	const pages = await getPages();
@@ -86,6 +88,25 @@ await Promise.all(
 );
 ---
 
+<script>
+	const scrollBtn = document.getElementById("to-top-btn") as HTMLButtonElement;
+	const targetHeader = document.getElementById("blog-hero") as HTMLDivElement;
+
+	function callback(entries: IntersectionObserverEntry[]) {
+		entries.forEach((entry) => {
+			// only show the scroll to top button when the heading is out of view
+			scrollBtn.dataset.show = (!entry.isIntersecting).toString();
+		});
+	}
+
+	scrollBtn.addEventListener("click", () => {
+		document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+	});
+
+	const observer = new IntersectionObserver(callback);
+	observer.observe(targetHeader);
+</script>
+
 <PageLayout
 	meta={{
 		title: page.Title || siteInfo.title,
@@ -93,9 +114,19 @@ await Promise.all(
 		ogImage: `/og-image/${page.Slug}.png`,
 	}}
 >
-	<section>
-		<NotionBlocks blocks={blocks} isRoot={true} />
-	</section>
+	<div class="sm:grid sm:grid-cols-4 sm:items-start sm:gap-x-10">
+		<article class="col-span-3 break-words" data-pagefind-body>
+			<div class="">
+				<NotionBlocks blocks={blocks} isRoot={true} />
+				<hr class="divider w-70 mx-auto my-4 h-1 rounded border-0 bg-accent/30" />
+
+				<WebMentions />
+				<PostComments />
+			</div>
+		</article>
+		<!-- {!!headings.length && <TOC headings={headings} />} -->
+	</div>
+
 	<!-- {
     //NOTE: This added a recent posts thing to my page. I can add it back later if needed
 		!slug && (
@@ -112,3 +143,21 @@ await Promise.all(
 		)
 	} -->
 </PageLayout>
+<button
+	id="to-top-btn"
+	class="z-90 fixed bottom-8 end-4 flex h-10 w-10 translate-y-28 items-center justify-center rounded-full border-2 border-transparent bg-zinc-200 text-3xl opacity-0 transition-all duration-300 hover:border-zinc-400 data-[show=true]:translate-y-0 data-[show=true]:opacity-100 dark:bg-zinc-700 sm:end-8 sm:h-12 sm:w-12"
+	aria-label="Back to Top"
+	data-show="false"
+	><svg
+		xmlns="http://www.w3.org/2000/svg"
+		aria-hidden="true"
+		focusable="false"
+		fill="none"
+		viewBox="0 0 24 24"
+		stroke-width="2"
+		stroke="currentColor"
+		class="h-6 w-6"
+	>
+		<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"></path>
+	</svg>
+</button>

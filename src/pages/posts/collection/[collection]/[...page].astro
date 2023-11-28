@@ -54,13 +54,13 @@ const meta = {
 const paginationProps = {
 	...(page.url.prev && {
 		prevUrl: {
-			url: page.url.prev,
+			url: getNavLink(page.url.prev),
 			text: `← Previous Posts`,
 		},
 	}),
 	...(page.url.next && {
 		nextUrl: {
-			url: page.url.next,
+			url: getNavLink(page.url.next),
 			text: `Next Posts →`,
 		},
 	}),
