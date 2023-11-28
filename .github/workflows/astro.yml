@@ -43,7 +43,7 @@ jobs:
         run: npm install
         working-directory: ${{ env.BUILD_PATH }}
 
-      - name: Set and log environment secrets and variables and then Build with Astro
+      - name: Set and log environment secrets and variables and then Build with Astro and postbuild for pagefind
         env:
           NOTION_API_SECRET: ${{ secrets.NOTION_API_SECRET }}
           GITHUB_PAGES: true
@@ -59,6 +59,7 @@ jobs:
           # --site and --base flags can be included if needed for Astro
           # --site steps.pages.outputs.origin" \
           # --base steps.pages.outputs.base_path"
+          npx --no-install pagefind --site dist
         working-directory: ${{ env.BUILD_PATH }}
 
       - name: Upload artifact
