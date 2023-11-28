@@ -40,7 +40,7 @@ jobs:
         uses: actions/configure-pages@v3
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
         working-directory: ${{ env.BUILD_PATH }}
 
       - name: Set and log environment secrets and variables and then Build with Astro
