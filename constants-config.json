@@ -1,6 +1,6 @@
 {
-  "DATABASE_ID": "169b6e632b7448529120599281265ac5",
-  "AUTHOR": "",
+  "DATABASE_ID": "3e588400b25641d8abf6527d2b41e6ad",
+  "AUTHOR": "Vlad Devs",
   "PUBLIC_GA_TRACKING_ID": "",
   "WEBMENTION_API_KEY": "",
   "WEBMENTION_LINK": "",
@@ -11,16 +11,15 @@
     "semanticscholar": "",
     "dblp": "",
     "facebook": "",
-    "twitter": "",
+    "twitter": "https://twitter.com/vladdevs",
     "threads": "",
     "instagram": "",
     "mastodon": "",
-    "this-github-repo": "https://github.com/nerdymomocat-templates/webtrotion-astro-notion-cms-website-blog"
+    "this-github-repo": "https://github.com/vlad-devs/vladdevs-on-webtrotion"
   },
   "CUSTOM_DOMAIN": "",
   "BASE_PATH": "",
   "GISCUS": {
-    "data-repo": "nerdymomocat-templates/blogtrotion-astro-notion-cms",
     "data-repo-id": " R_kgDOKy6K2w",
     "data-category": "Announcements",
     "data-category-id": "DIC_kwDOKy6K284CbUiH",
