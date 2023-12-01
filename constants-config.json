@@ -81,6 +81,6 @@
     "COLUMNS": 2,
     "EXCERPT": true
   },
-  "OPTIMIZE_IMAGES": false,
+  "OPTIMIZE_IMAGES": true,
   "REDIRECTS": {}
 }
